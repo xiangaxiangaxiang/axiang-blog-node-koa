@@ -11,7 +11,7 @@ User.init({
         primaryKey: true,
         autoIncrement: true
     },
-    nickname: Sequelize.STRING(16),
+    nickname: Sequelize.STRING(32),
     avatar: Sequelize.STRING,
     account: {
         type: Sequelize.STRING(16),
