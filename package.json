@@ -8,10 +8,10 @@
     "basic-auth": "^2.0.1",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.4.0",
+    "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
-    "koa": "^2.7.0",
     "lodash": "^4.17.11",
     "module-alias": "^2.2.0",
     "mysql2": "^1.6.5",
@@ -35,7 +35,10 @@
   ],
   "author": "XiangAXiangAXiang",
   "license": "MIT",
-  "devDependencies": {},
+  "devDependencies": {
+    "ftp": "^0.3.10",
+    "koa-body": "^4.1.1"
+  },
   "_moduleAliases": {
     "@root": ".",
     "@models": "app/models",

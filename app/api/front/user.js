@@ -7,6 +7,11 @@ const router = new Router({
     prefix: '/front/user'
 })
 
+router.post('/test', async (ctx) => {
+    const file = ctx.request.body.files
+    console.log(`file is ${file}`)
+})
+
 router.post('/register', async (ctx) => {
     const v = await new RegisterValidator().validate(ctx)
 
