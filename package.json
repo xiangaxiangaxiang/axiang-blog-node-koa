@@ -36,6 +36,7 @@
   "author": "XiangAXiangAXiang",
   "license": "MIT",
   "devDependencies": {
+    "fs": "0.0.1-security",
     "ftp": "^0.3.10",
     "koa-body": "^4.1.1"
   },
