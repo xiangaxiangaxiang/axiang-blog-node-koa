@@ -11,27 +11,6 @@ const router = new Router({
 
 const c = new Client();
 
-router.post('/test', async (ctx) => {
-    const files = ctx.request.body.file
-    let filesArr = Array.from(files)
-    let file = filesArr[0]
-    // console.log(`file is ${file[0]}`)
-    c.connect({
-        user: 'cpx',
-        password: 'cpxlalala'
-    })
-    c.on('ready', function() {
-        c.put(file, '1.png',function(err) {
-            if (err) throw err;
-            c.end();
-        });
-    });
-    ctx.body = {
-        status: 0,
-        msg: 'success'
-    }
-})
-
 router.post('/register', async (ctx) => {
     const v = await new RegisterValidator().validate(ctx)
 
