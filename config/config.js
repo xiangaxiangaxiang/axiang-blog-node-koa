@@ -11,4 +11,10 @@ module.exports = {
         secretKey: 'lalalalalaldemaxiya',
         expiresIn: 60*60
     },
+    ftp: {
+        host: 'localhost',
+        port: 21,
+        user: 'cpx',
+        password: 'cpxlalala'
+    }
 }

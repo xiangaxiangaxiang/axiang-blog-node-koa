@@ -15,7 +15,7 @@ const catchError = async (ctx, next) => {
         if (isHttpException) {
             ctx.body = {
                 msg: error.msg,
-                error_code: error.errorCode,
+                status: error.errorCode,
                 request: requestUrl
             }
             ctx.status = error.code

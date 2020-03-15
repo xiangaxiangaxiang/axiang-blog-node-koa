@@ -1,10 +1,14 @@
 const {LinValidator, Rule} = require('../../core/lin-validator')
+const {User} = require('@models/user')
 
 class RegisterValidator extends LinValidator {
     constructor() {
         super()
         this.account = [
-            new Rule('isLength', '账号至少6个字符，最多16个字符', {})
+            new Rule('isLength', '账号至少6个字符，最多16个字符', {
+                min: 4,
+                max: 32
+            })
         ]
         this.password1 = [
             new Rule('isLength', '密码至少6个字符，最多32个字符', {
@@ -15,7 +19,7 @@ class RegisterValidator extends LinValidator {
         this.password2 = this.password1
         this.nickname = [
             new Rule('isLength', '昵称不符合长度规范', {
-                min: 4,
+                min: 2,
                 max: 32
             })
         ]
@@ -29,7 +33,7 @@ class RegisterValidator extends LinValidator {
         }
     }
 
-    async validateAccount(vals) {
+    async validateEmail(vals) {
         const account = vals.body.account
         const user = await User.findOne({
             where: {
@@ -37,7 +41,11 @@ class RegisterValidator extends LinValidator {
             }
         })
         if (user) {
-            throw new Error('Email 已存在')
+            throw new Error('账号已存在')
         }
     }
+}
+
+module.exports = {
+    RegisterValidator
 }

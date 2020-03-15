@@ -1,8 +1,9 @@
+const bcrypt = require('bcryptjs')
 const {Sequelize, Model} = require('sequelize')
 const { sequelize } = require('../../core/db')
 
 class User extends Model {
-
+    
 }
 
 User.init({
@@ -30,3 +31,7 @@ User.init({
     sequelize,
     tableName: 'user'
 })
+
+module.exports = {
+    User
+}

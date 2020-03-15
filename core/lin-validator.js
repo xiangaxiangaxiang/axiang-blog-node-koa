@@ -20,7 +20,8 @@ class LinValidator {
       body: ctx.request.body,
       query: ctx.request.query,
       path: ctx.params,
-      header: ctx.request.header
+      header: ctx.request.header,
+      files: ctx.request.files
     };
   }
 
