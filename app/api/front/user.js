@@ -1,12 +1,34 @@
 const Router = require('koa-router')
 
 const {User} = require('@models/user')
-const {RegisterValidator} = require('@validator')
+const {RegisterValidator, LoginValidator, NotEmptyValidator} = require('@validator')
 const {UserType} = require('../../lib/enum')
 const {upload} = require('../../lib/upload')
+const {generateToken} = require('@core/util')
+const {Auth} = require('@middlewares/auth')
 
 const router = new Router({
     prefix: '/front/user'
+})
+
+router.post('/login', async (ctx) => {
+    const v = await new LoginValidator().validate(ctx)
+    const account = v.get('body.account')
+    const password = v.get('body.password')
+    // 验证密码
+    const user = await User.verifyPassword(account, password)
+    const token = generateToken(user.id, user.user_type)
+    ctx.body = {
+        token
+    }
+})
+
+router.get('/verify', async (ctx) => {
+    const v = await new NotEmptyValidator().validate(ctx)
+    const result =  Auth.verifyToken(v.get('query.token'))
+    ctx.body = {
+        result
+    }
 })
 
 router.post('/register', async (ctx) => {
@@ -16,7 +38,9 @@ router.post('/register', async (ctx) => {
     let avatar_path
 
     if (file) {
+        // 获取文件后缀
         const suffix = file.name.split('.').reverse()[0]
+
         avatar_path = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
         const file_path = file.path
         

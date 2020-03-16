@@ -4,9 +4,6 @@ const jwt = require('jsonwebtoken')
 class Auth {
     constructor(level) {
         this.level = level || 1
-        Auth.USER = 8
-        Auth.ADMIN = 16
-        Auth.SUPER_ADMIN = 32
     }
 
     get m() {
@@ -25,14 +22,14 @@ class Auth {
                 throw new global.errs.Forbbiden(errMsg)
             }
 
-            if (decode.scope < this.level) {
+            if (decode.user_type < this.level) {
                 errMsg = '权限不足'
                 throw new global.errs.Forbbiden(errMsg)
             }
 
             ctx.auth = {
                 uid: decode.uid,
-                scope: decode.scope
+                user_type: decode.user_type
             }
 
             await next()

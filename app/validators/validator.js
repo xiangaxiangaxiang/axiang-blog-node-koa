@@ -6,8 +6,8 @@ class RegisterValidator extends LinValidator {
         super()
         this.account = [
             new Rule('isLength', '账号至少6个字符，最多16个字符', {
-                min: 4,
-                max: 32
+                min: 6,
+                max: 16
             })
         ]
         this.password1 = [
@@ -46,6 +46,35 @@ class RegisterValidator extends LinValidator {
     }
 }
 
+class LoginValidator extends LinValidator {
+    constructor() {
+        super()
+        this.account = [
+            new Rule('isLength', '账号至少6个字符，最多16个字符', {
+                min: 6,
+                max: 16
+            })
+        ]
+        this.password = [
+            new Rule('isLength', '密码至少6个字符，最多32个字符', {
+                min: 6,
+                max: 32
+            })
+        ]
+    }
+}
+
+class NotEmptyValidator extends LinValidator {
+    constructor() {
+        super()
+        this.token = [
+            new Rule('isLength', '不允许为空', {min: 1})
+        ]
+    }
+}
+
 module.exports = {
-    RegisterValidator
+    RegisterValidator,
+    LoginValidator,
+    NotEmptyValidator
 }
