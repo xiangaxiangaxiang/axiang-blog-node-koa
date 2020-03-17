@@ -3,7 +3,8 @@ const {Sequelize, Model} = require('sequelize')
 const { sequelize } = require('../../core/db')
 
 class User extends Model {
-    static async verifyPassword(account, password) {
+
+    static async verifyAccount(account, password) {
         const user = await User.findOne({
             where: {
                 account
@@ -12,11 +13,35 @@ class User extends Model {
         if (!user) {
             throw new global.errs.NotFound('账号不存在')
         }
+        if (user.enable === 0) {
+            throw new global.errs.AuthFailed('账号已被禁用')
+        }
         const correct = bcrypt.compareSync(password, user.password)
         if (!correct) {
             throw new global.errs.AuthFailed('密码不正确')
         }
         return user
+    }
+
+    static async updateUser(id, nickname, password, avatar) {
+        const user = await User.findOne({
+            where: {
+                id
+            }
+        })
+        if (!user) {
+            throw new global.errs.NotFound('账号不存在')
+        }
+        const userInfo = {
+            nickname: nickname ? nickname : user.nickname,
+            password: password ? password: user.password,
+            avatar: avatar ? avatar : user.avatar,
+        }
+        return await User.update(userInfo, {
+            where: {
+                id
+            }
+        })
     }
 }
 
@@ -41,6 +66,10 @@ User.init({
             this.setDataValue('password', psw)
         }
     },
+    enable: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1
+    }
 }, {
     sequelize,
     tableName: 'user'
