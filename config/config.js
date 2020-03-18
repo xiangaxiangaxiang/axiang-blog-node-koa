@@ -16,5 +16,6 @@ module.exports = {
         port: 21,
         user: 'cpx',
         password: 'cpxlalala'
-    }
+    },
+    adminSecret: 'demaxiyawansui'
 }

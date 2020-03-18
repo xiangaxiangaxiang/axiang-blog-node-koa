@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 class Auth {
     constructor() {
         Auth.USER = 1
-        Auth.ADMIN = 200
+        Auth.ADMIN = 199
     }
 
     _verifyToken(userToken) {

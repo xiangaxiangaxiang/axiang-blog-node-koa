@@ -105,9 +105,26 @@ class UpdateUserValidator extends LinValidator {
     }
 }
 
+class AdminRegisterValidator extends RegisterValidator {
+    constructor() {
+        super()
+        this.secret = [
+            new Rule('isLength', '必须输入密令', {min: 1})
+        ]
+    }
+
+    validateSecret(vals) {
+        const secret = vals.body.secret
+        if (secret !== global.config.adminSecret) {
+            throw new Error('密令不正确')
+        }
+    }
+}
+
 module.exports = {
     RegisterValidator,
     LoginValidator,
     NotEmptyValidator,
-    UpdateUserValidator
+    UpdateUserValidator,
+    AdminRegisterValidator
 }
