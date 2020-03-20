@@ -24,19 +24,23 @@ router.post('/admin_register', async (ctx) => {
     const v = await new AdminRegisterValidator().validate(ctx)
 
     const file = v.get('files.file')
-    let avatar_path
+    let avatarPath
 
     if (file) {
         // 获取文件后缀
         const suffix = file.name.split('.').reverse()[0]
 
-        avatar_path = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
+        avatarPath = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
         
         // 上传文件到ftp服务器
-        upload(file.path, avatar_path)
+        let filelist = [{
+            file_path: file.path,
+            avatarPath
+        }]
+        upload(filelist)
     } else {
         // 如果用户没有上传头像则随机分配一个头像
-        avatar_path = `/img/avatar/default_${ Math.floor(Math.random() * 5) + 1 }.jpg`
+        avatarPath = `/img/avatar/default_${ Math.floor(Math.random() * 5) + 1 }.jpg`
     }
 
     const user = {
@@ -44,7 +48,7 @@ router.post('/admin_register', async (ctx) => {
         password: v.get('body.password2'),
         nickname: v.get('body.nickname'),
         user_type: UserType.ADMIN,
-        avatar: avatar_path
+        avatar: avatarPath
     }
     const result = await User.create(user)
     throw new global.errs.Success()
@@ -59,18 +63,21 @@ router.post('/update', new Auth().user, async (ctx) => {
     const password = v.get('body.password2')
     // 修改用户头像
     const file = v.get('files.file')
-    let avatar_path
     if (file) {
         // 获取文件后缀
         const suffix = file.name.split('.').reverse()[0]
 
-        avatar_path = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
+        const avatarPath = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
         
         // 上传文件到ftp服务器
-        upload(file.path, avatar_path)
+        let filelist = [{
+            file_path: file.path,
+            avatarPath
+        }]
+        upload(filelist)
     }
 
-    const result = await User.updateUser(id, nickname, password, avatar_path)
+    const result = await User.updateUser(id, nickname, password)
     throw new global.errs.Success()
 
 })
@@ -82,6 +89,7 @@ router.post('/login', async (ctx) => {
     const password = v.get('body.password')
     // 验证密码,用户状态
     const user = await User.verifyAccount(account, password)
+    // 生成token
     const token = generateToken(user.id, user.user_type)
     user.setDataValue('token', token)
     ctx.body = {
@@ -106,19 +114,23 @@ router.post('/register', async (ctx) => {
     const v = await new RegisterValidator().validate(ctx)
     
     const file = v.get('files.file')
-    let avatar_path
+    let avatarPath
 
     if (file) {
         // 获取文件后缀
         const suffix = file.name.split('.').reverse()[0]
 
-        avatar_path = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
+        avatarPath = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
         
         // 上传文件到ftp服务器
-        upload(file.path, avatar_path)
+        let filelist = [{
+            file_path: file.path,
+            avatarPath
+        }]
+        upload(filelist)
     } else {
         // 如果用户没有上传头像则随机分配一个头像
-        avatar_path = `/img/avatar/default_${ Math.floor(Math.random() * 5) + 1 }.jpg`
+        avatarPath = `/img/avatar/default_${ Math.floor(Math.random() * 5) + 1 }.jpg`
     }
 
     const user = {
@@ -126,7 +138,7 @@ router.post('/register', async (ctx) => {
         password: v.get('body.password2'),
         nickname: v.get('body.nickname'),
         user_type: UserType.USER,
-        avatar: avatar_path
+        avatar: avatarPath
     }
     const result = await User.create(user)
     throw new global.errs.Success()

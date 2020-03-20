@@ -31,13 +31,13 @@ const findMembers = function(instance, { prefix, specifiedType, filter }) {
   return _find(instance);
 };
 
-const generateToken = function(account, user_type) {
+const generateToken = function(account, userType) {
   const secretKey = global.config.security.secretKey;
   const expiresIn = global.config.security.expiresIn;
   const token = jwt.sign(
     {
       account,
-      user_type
+      userType
     },
     secretKey,
     {

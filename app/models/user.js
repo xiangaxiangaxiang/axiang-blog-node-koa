@@ -4,6 +4,7 @@ const { sequelize } = require('../../core/db')
 
 class User extends Model {
 
+    // 验证账号
     static async verifyAccount(account, password) {
         const user = await User.findOne({
             where: {
@@ -23,7 +24,8 @@ class User extends Model {
         return user
     }
 
-    static async updateUser(id, nickname, password, avatar) {
+    // 修改用户信息
+    static async updateUser(id, nickname, password) {
         const user = await User.findOne({
             where: {
                 id
@@ -35,7 +37,7 @@ class User extends Model {
         const userInfo = {
             nickname: nickname ? nickname : user.nickname,
             password: password ? password: user.password,
-            avatar: avatar ? avatar : user.avatar,
+            avatar: user.avatar,
         }
         return await User.update(userInfo, {
             where: {

@@ -7,12 +7,14 @@ class Auth {
         Auth.ADMIN = 199
     }
 
+    // 验证token
     _verifyToken(userToken) {
         let errMsg = 'token不合法'
         if (!userToken || !userToken.name) {
             throw new global.errs.Forbbiden(errMsg)
         }
         try {
+            // 解码token
             var decode = jwt.verify(userToken.name, global.config.security.secretKey)
         } catch (error) {
             if (error.name == 'TokenExpireError') {
@@ -29,14 +31,14 @@ class Auth {
             const userToken = basicAuth(ctx.req)
             let decode = this._verifyToken(userToken)
 
-            if (decode.user_type < Auth.ADMIN) {
+            if (decode.userType < Auth.ADMIN) {
                 const errMsg = '权限不足,需要管理员权限'
                 throw new global.errs.Forbbiden(errMsg)
             }
 
             ctx.auth = {
                 uid: decode.uid,
-                user_type: decode.user_type
+                userType: decode.userType
             }
 
             await next()
@@ -50,28 +52,28 @@ class Auth {
             
             let decode = this._verifyToken(userToken)
 
-            if (decode.user_type < Auth.USER) {
+            if (decode.userType < Auth.USER) {
                 const errMsg = '权限不足'
                 throw new global.errs.Forbbiden(errMsg)
             }
 
             ctx.auth = {
                 uid: decode.uid,
-                user_type: decode.user_type
+                userType: decode.userType
             }
 
             await next()
         }
     }
 
-    static verifyToken(token) {
-        try {
-            const v = jwt.verify(token, global.config.security.secretKey)
-            return true
-        } catch (error) {
-            return false
-        }
-    }
+    // static verifyToken(token) {
+    //     try {
+    //         const v = jwt.verify(token, global.config.security.secretKey)
+    //         return true
+    //     } catch (error) {
+    //         return false
+    //     }
+    // }
 }
 
 module.exports = {

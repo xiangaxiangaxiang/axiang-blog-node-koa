@@ -1,16 +1,23 @@
 const Client = require('ftp');
 const fs = require('fs');
 
-const c = new Client();
+const ftp = new Client();
 
-function upload(file_path, save_path) {
-    c.connect(global.config.ftp)
+// 上传文件到ftp服务器
+function upload(pathlist) {
+    ftp.connect(global.config.ftp)
 
-    c.on('ready', function() {
-        c.put(file_path, save_path,function(err) {
-            if (err) throw err;
-            c.end();
-        });
+    ftp.on('ready', function() {
+        for (let i in pathlist) {
+            ftp.put(pathlist[i].filePath, pathlist[i].savePath,function(err) {
+                if (err) {
+                    ftp.end();
+                    throw err
+                }
+                console.log('finish')
+            });
+        }
+        ftp.end()
     });
 }
 

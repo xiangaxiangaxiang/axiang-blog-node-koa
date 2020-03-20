@@ -1,5 +1,6 @@
 const {HttpException} = require('../core/http-exception')
 
+// 统一处理所有的错误
 const catchError = async (ctx, next) => {
     try{
         await next()
@@ -12,6 +13,7 @@ const catchError = async (ctx, next) => {
         }
 
         requestUrl = `${ctx.method} ${ctx.path}`
+        // 如果是主动抛出的错误
         if (isHttpException) {
             ctx.body = {
                 msg: error.msg,
@@ -19,7 +21,8 @@ const catchError = async (ctx, next) => {
                 request: requestUrl
             }
             ctx.status = error.code
-        } else {
+        } else { 
+            // 未知错误
             console.log(error)
             ctx.body = {
                 msg: 'we make a mistake',

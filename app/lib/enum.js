@@ -7,6 +7,7 @@ function isThisType(val) {
     return false
 }
 
+// 用户类型
 const UserType = {
     USER: 100,
     ADMIN: 200,
