@@ -59,7 +59,7 @@ User.init({
         type: Sequelize.STRING(16),
         unique: true
     },
-    user_type: Sequelize.INTEGER,
+    userType: Sequelize.INTEGER,
     password: {
         type: Sequelize.STRING,
         set(val) {

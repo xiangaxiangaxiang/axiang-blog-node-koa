@@ -121,10 +121,26 @@ class AdminRegisterValidator extends RegisterValidator {
     }
 }
 
+class AddArticleValidator extends LinValidator {
+    constructor() {
+        super()
+        this.title = [
+            new Rule('isLength', '标题长度为2-32', {min: 2, max: 32})
+        ]
+        this.articleType = [
+             new Rule('isInt', '文章类型为数字', {})
+        ]
+        this.labels = [
+            new Rule('isLength', '至少选择一个标签', {min: 1})
+        ]
+    }
+}
+
 module.exports = {
     RegisterValidator,
     LoginValidator,
     NotEmptyValidator,
     UpdateUserValidator,
-    AdminRegisterValidator
+    AdminRegisterValidator,
+    AddArticleValidator
 }

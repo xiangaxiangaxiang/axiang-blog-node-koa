@@ -14,7 +14,6 @@ function upload(pathlist) {
                     ftp.end();
                     throw err
                 }
-                console.log('finish')
             });
         }
         ftp.end()

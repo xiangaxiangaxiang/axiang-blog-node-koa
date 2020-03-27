@@ -34,7 +34,7 @@ router.post('/admin_register', async (ctx) => {
         
         // 上传文件到ftp服务器
         let filelist = [{
-            file_path: file.path,
+            filePath: file.path,
             avatarPath
         }]
         upload(filelist)
@@ -47,7 +47,7 @@ router.post('/admin_register', async (ctx) => {
         account: v.get('body.account'),
         password: v.get('body.password2'),
         nickname: v.get('body.nickname'),
-        user_type: UserType.ADMIN,
+        userType: UserType.ADMIN,
         avatar: avatarPath
     }
     const result = await User.create(user)
@@ -71,7 +71,7 @@ router.post('/update', new Auth().user, async (ctx) => {
         
         // 上传文件到ftp服务器
         let filelist = [{
-            file_path: file.path,
+            filePath: file.path,
             avatarPath
         }]
         upload(filelist)
@@ -90,7 +90,7 @@ router.post('/login', async (ctx) => {
     // 验证密码,用户状态
     const user = await User.verifyAccount(account, password)
     // 生成token
-    const token = generateToken(user.id, user.user_type)
+    const token = generateToken(user.id, user.userType)
     user.setDataValue('token', token)
     ctx.body = {
         token,
@@ -124,7 +124,7 @@ router.post('/register', async (ctx) => {
         
         // 上传文件到ftp服务器
         let filelist = [{
-            file_path: file.path,
+            filePath: file.path,
             avatarPath
         }]
         upload(filelist)
@@ -137,7 +137,7 @@ router.post('/register', async (ctx) => {
         account: v.get('body.account'),
         password: v.get('body.password2'),
         nickname: v.get('body.nickname'),
-        user_type: UserType.USER,
+        userType: UserType.USER,
         avatar: avatarPath
     }
     const result = await User.create(user)

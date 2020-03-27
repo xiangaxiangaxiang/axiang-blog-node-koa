@@ -1,11 +1,16 @@
 const Router = require('koa-router')
+const xss = require('xss')
+
 const {upload} = require('../../lib/upload')
+const {Auth} = require('@middlewares/auth')
+const {AddArticleValidator} = require('@validator')
+const {Article} = require('@models/article')
 
 const router = new Router({
     prefix: '/back/article'
 })
 
-router.post('/image_upload', async (ctx) => {
+router.post('/image_upload',async (ctx) => {
     files = ctx.request.files
     let urlList = []
     let saveList = []
@@ -24,6 +29,28 @@ router.post('/image_upload', async (ctx) => {
     ctx.body = {
         status: 0,
         data: urlList
+    }
+})
+
+router.post('/add', async (ctx) => {
+    const v = await new AddArticleValidator().validate(ctx)
+
+    // 获取参数
+    const title = v.get('body.title')
+    const labels = v.get('body.labels')
+    const articleType = v.get('body.articleType')
+    let content = v.get('body.content')
+
+    const article = {
+        title,
+        labels,
+        articleType,
+        content: xss(content)
+    }
+
+    const result = await Article.create(article)
+    ctx.body = {
+        result
     }
 })
 

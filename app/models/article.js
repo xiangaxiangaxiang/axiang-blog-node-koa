@@ -15,15 +15,18 @@ Article.init({
         type: Sequelize.STRING,
         require: true
     },
-    article_type: {
+    articleType: {
         type: Sequelize.INTEGER,
         require: true
     },
-    lables: Sequelize.STRING,
+    labels: Sequelize.STRING,
     content: {
         type: Sequelize.TEXT('long'),
         require: true
     }
+}, {
+    sequelize,
+    tableName: 'article'
 })
 
 module.exports = {
