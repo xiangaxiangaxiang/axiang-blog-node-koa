@@ -1,6 +1,7 @@
 const {LinValidator, Rule} = require('../../core/lin-validator')
 const {User} = require('@models/user')
 
+// 创建用户
 class RegisterValidator extends LinValidator {
     constructor() {
         super()
@@ -46,6 +47,7 @@ class RegisterValidator extends LinValidator {
     }
 }
 
+// 登陆验证
 class LoginValidator extends LinValidator {
     constructor() {
         super()
@@ -64,6 +66,7 @@ class LoginValidator extends LinValidator {
     }
 }
 
+// 非空验证
 class NotEmptyValidator extends LinValidator {
     constructor() {
         super()
@@ -73,6 +76,7 @@ class NotEmptyValidator extends LinValidator {
     }
 }
 
+// 更新用户信息
 class UpdateUserValidator extends LinValidator {
     constructor() {
         super()
@@ -105,6 +109,7 @@ class UpdateUserValidator extends LinValidator {
     }
 }
 
+// 超级管理员注册
 class AdminRegisterValidator extends RegisterValidator {
     constructor() {
         super()
@@ -121,6 +126,7 @@ class AdminRegisterValidator extends RegisterValidator {
     }
 }
 
+// 添加文章
 class AddArticleValidator extends LinValidator {
     constructor() {
         super()
@@ -136,11 +142,22 @@ class AddArticleValidator extends LinValidator {
     }
 }
 
+// 修改文章
+class ModifyArticleValidator extends AddArticleValidator {
+    constructor() {
+        super()
+        this.id = [
+            new Rule('isInt', 'ID是必须参数')
+        ]
+    }
+}
+
 module.exports = {
     RegisterValidator,
     LoginValidator,
     NotEmptyValidator,
     UpdateUserValidator,
     AdminRegisterValidator,
-    AddArticleValidator
+    AddArticleValidator,
+    ModifyArticleValidator
 }

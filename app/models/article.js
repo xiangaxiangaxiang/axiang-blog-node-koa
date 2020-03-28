@@ -2,7 +2,31 @@ const {Sequelize, Model} = require('sequelize')
 const { sequelize } = require('../../core/db')
 
 class Article extends Model {
+    // 删除文章
+    static async deleteArticle(id) {
+        const article = await Article.findOne({
+            where: {
+                id
+            }
+        })
+        if (!article) {
+            throw new global.errs.NotFound('文章不存在')
+        }
+        article.destroy()
+    }
 
+    // 修改文章
+    static async updateArticle(id, newArticle) {
+        const article = await Article.findOne({
+            where: {
+                id
+            }
+        })
+        if (!article) {
+            throw new global.errs.NotFound('文章不存在')
+        }
+        await article.update(newArticle)
+    }
 }
 
 Article.init({

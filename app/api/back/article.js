@@ -3,14 +3,17 @@ const xss = require('xss')
 
 const {upload} = require('../../lib/upload')
 const {Auth} = require('@middlewares/auth')
-const {AddArticleValidator} = require('@validator')
+const {
+    AddArticleValidator，
+    ModifyArticleValidator
+} = require('@validator')
 const {Article} = require('@models/article')
 
 const router = new Router({
     prefix: '/back/article'
 })
 
-router.post('/image_upload',async (ctx) => {
+router.post('/image_upload', new Auth().admin, async (ctx) => {
     files = ctx.request.files
     let urlList = []
     let saveList = []
@@ -32,7 +35,7 @@ router.post('/image_upload',async (ctx) => {
     }
 })
 
-router.post('/add', async (ctx) => {
+router.post('/add', new Auth().admin,async (ctx) => {
     const v = await new AddArticleValidator().validate(ctx)
 
     // 获取参数
@@ -52,6 +55,19 @@ router.post('/add', async (ctx) => {
     ctx.body = {
         result
     }
+})
+
+router.post('/modify_article', new Auth().admin, async (ctx) => {
+    const v = await new ModifyArticleValidator().validate(ctx)
+})
+
+router.post('/delete', new Auth().admin,async (ctx) => {
+    const id = ctx.body.id
+    if (!id) {
+        throw new global.errs.ParameterException()
+    }
+    Article.deleteArticle(id)
+    throw new global.errs.Success()
 })
 
 module.exports = router
