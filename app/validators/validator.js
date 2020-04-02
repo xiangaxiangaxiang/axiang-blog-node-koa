@@ -152,6 +152,19 @@ class ModifyArticleValidator extends AddArticleValidator {
     }
 }
 
+// 点赞判断
+class LikeValidator extends LinValidator{
+    constructor() {
+        super()
+        this.contentID = [
+            new Rule('isInt', 'ID不能为空')
+        ]
+        this.type = [
+            new Rule('isInt', '类型不能为空')
+        ]
+    }
+}
+
 module.exports = {
     RegisterValidator,
     LoginValidator,
@@ -159,5 +172,6 @@ module.exports = {
     UpdateUserValidator,
     AdminRegisterValidator,
     AddArticleValidator,
-    ModifyArticleValidator
+    ModifyArticleValidator,
+    LikeValidator
 }

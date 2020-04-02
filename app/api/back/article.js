@@ -14,7 +14,7 @@ const router = new Router({
 })
 
 router.post('/image_upload', new Auth().admin, async (ctx) => {
-    files = ctx.request.files
+    const files = ctx.request.files
     let urlList = []
     let saveList = []
     // 保存图片并返回对应的URL
@@ -57,8 +57,25 @@ router.post('/add', new Auth().admin,async (ctx) => {
     }
 })
 
-router.post('/modify_article', new Auth().admin, async (ctx) => {
+router.post('/modify', new Auth().admin, async (ctx) => {
     const v = await new ModifyArticleValidator().validate(ctx)
+
+    // 获取参数
+    const id = v.get('body.id')
+    const title = v.get('body.title')
+    const labels = v.get('body.labels')
+    const articleType = v.get('body.articleType')
+    let content = v.get('body.content')
+
+    const article = {
+        title,
+        labels,
+        articleType,
+        content: xss(content)
+    }
+
+    await Article.updateArticle(id, article)
+    throw new global.errs.Success()
 })
 
 router.post('/delete', new Auth().admin,async (ctx) => {

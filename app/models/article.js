@@ -12,7 +12,7 @@ class Article extends Model {
         if (!article) {
             throw new global.errs.NotFound('文章不存在')
         }
-        article.destroy()
+        await article.destroy()
     }
 
     // 修改文章
