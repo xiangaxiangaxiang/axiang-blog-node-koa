@@ -1,23 +1,26 @@
 const Router = require('koa-router')
 
 const {LikeValidator} = require('@validator')
-const {Like} = require('@models/like')
+const {Comment} = require('@models/comment')
 
 const router = new Router({
-    prefix: '/front/like'
+    prefix: '/front/comment'
 })
 
-router.post('/', new Auth().user, async (ctx) => {
+router.post('/add', new Auth().user, async (ctx) => {
     const v = await new LikeValidator().validate(ctx)
     const targetID = v.get('body.targetID')
-    const type = v.get('body.type')
+    const content = v.get('body.content')
     const uid = ctx.auth.uid
+    // 如果是回复别人
+    const commentID = v.get('body.commentID')
+    const replyUserID = v.get('body.replyUserID')
 
-    await Like.like(targetID, type, uid)
+    await Comment.addComment(targetID, content, uid, commentID, replyUserID)
     throw new global.errs.Success() 
 })
 
-router.post('/dislike', new Auth().user, async (ctx) => {
+router.post('/delete', new Auth().user, async (ctx) => {
     const v = await new LikeValidator().validate(ctx)
     const targetID = v.get('body.targetID')
     const type = v.get('body.type')

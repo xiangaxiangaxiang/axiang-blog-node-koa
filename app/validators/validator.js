@@ -156,7 +156,7 @@ class ModifyArticleValidator extends AddArticleValidator {
 class LikeValidator extends LinValidator{
     constructor() {
         super()
-        this.contentID = [
+        this.targetID = [
             new Rule('isInt', 'ID不能为空')
         ]
         this.type = [
