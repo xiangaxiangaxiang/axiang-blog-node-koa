@@ -81,7 +81,7 @@ class UpdateUserValidator extends LinValidator {
     constructor() {
         super()
         this.id = [
-            new Rule('isInt', 'ID是必须参数')
+            new Rule('isInt', 'Id是必须参数')
         ]
         this.password1 = [
             new Rule('isLength', '密码至少6个字符，最多32个字符', {
@@ -147,7 +147,7 @@ class ModifyArticleValidator extends AddArticleValidator {
     constructor() {
         super()
         this.id = [
-            new Rule('isInt', 'ID是必须参数')
+            new Rule('isInt', 'Id是必须参数')
         ]
     }
 }
@@ -156,11 +156,29 @@ class ModifyArticleValidator extends AddArticleValidator {
 class LikeValidator extends LinValidator{
     constructor() {
         super()
-        this.targetID = [
-            new Rule('isInt', 'ID不能为空')
+        this.targetId = [
+            new Rule('isInt', 'Id不能为空')
         ]
         this.type = [
             new Rule('isInt', '类型不能为空')
+        ]
+    }
+}
+
+// 评论判断
+
+class CommentValidator extends LinValidator {
+    constructor() {
+        super()
+        this.targetId = [
+            new Rule('isInt', 'targetId是必须参数')
+        ]
+        this.content = [
+            new Rule('isLength', '评论超过最大长度', {min: 1, max: 256})
+        ]
+        this.replyUserId = [
+            new Rule('isOptional', ''),
+            new Rule('isInt', '回复用户Id格式不正确')
         ]
     }
 }
@@ -173,5 +191,6 @@ module.exports = {
     AdminRegisterValidator,
     AddArticleValidator,
     ModifyArticleValidator,
-    LikeValidator
+    LikeValidator,
+    CommentValidator
 }

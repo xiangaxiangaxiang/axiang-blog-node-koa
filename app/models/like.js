@@ -2,10 +2,11 @@ const {Sequelize, Model} = require('sequelize')
 const { sequelize } = require('../../core/db')
 
 class Like extends Model {
-    static async like(targetID, type , uid) {
+    
+    static async like(targetId, type , uid) {
         const likeItem = await Like.findOne({
             where: {
-                targetID,
+                targetId,
                 type,
                 uid
             }
@@ -14,16 +15,16 @@ class Like extends Model {
             throw new global.errs.LikeError()
         }
         await Like.create({
-            targetID,
+            targetId,
             type,
             uid
-        }
+        })
     }
 
-    static async dislike(targetID, type, uid) {
+    static async dislike(targetId, type, uid) {
         const likeItem = await Like.findOne({
             where: {
-                targetID,
+                targetId,
                 type,
                 uid
             }
@@ -37,7 +38,7 @@ class Like extends Model {
 
 Like.init({
     uid: Sequelize.INTEGER,
-    targetID: Sequelize.INTEGER,
+    targetId: Sequelize.INTEGER,
     type: Sequelize.INTEGER,
 }, {
     sequelize,
@@ -45,5 +46,5 @@ Like.init({
 })
 
 module.exports = {
-    Article
+    Like
 }

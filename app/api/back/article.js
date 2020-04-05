@@ -4,7 +4,7 @@ const xss = require('xss')
 const {upload} = require('../../lib/upload')
 const {Auth} = require('@middlewares/auth')
 const {
-    AddArticleValidator，
+    AddArticleValidator,
     ModifyArticleValidator
 } = require('@validator')
 const {Article} = require('@models/article')
@@ -79,7 +79,7 @@ router.post('/modify', new Auth().admin, async (ctx) => {
 })
 
 router.post('/delete', new Auth().admin,async (ctx) => {
-    const id = ctx.body.id
+    const id = ctx.request.body.id
     if (!id) {
         throw new global.errs.ParameterException()
     }
