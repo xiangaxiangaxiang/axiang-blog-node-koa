@@ -82,7 +82,11 @@ Comment.init({
     targetId: Sequelize.INTEGER,
     content: Sequelize.STRING,
     userInfo: Sequelize.STRING,
-    replyUserInfo: Sequelize.STRING
+    replyUserInfo: Sequelize.STRING,
+    likeNums: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    }
 }, {
     sequelize,
     tableName: 'comment'

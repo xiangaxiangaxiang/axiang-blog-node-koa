@@ -1,9 +1,10 @@
 const {Sequelize, Model} = require('sequelize')
 const { sequelize } = require('../../core/db')
+const {Operation} = require('./operation')
 
 class Like extends Model {
     
-    static async like(targetId, type , uid) {
+    static async like(targetId, type, uid) {
         const likeItem = await Like.findOne({
             where: {
                 targetId,
@@ -14,10 +15,17 @@ class Like extends Model {
         if (likeItem) {
             throw new global.errs.LikeError()
         }
-        await Like.create({
-            targetId,
-            type,
-            uid
+        return sequelize.transaction(async t => {
+            await Like.create({
+                targetId,
+                type,
+                uid
+            }, {transaction: t})
+            const data = await Operation.getData(targetId, type)
+            await art.increment('likeNums', {
+                by: 1,
+                transaction: t
+            })
         })
     }
 
@@ -32,7 +40,18 @@ class Like extends Model {
         if (!likeItem) {
             throw new global.errs.DislikeError()
         }
-        await likeItem.destroy()
+        
+        return sequelize.transaction(async t => {
+            await likeItem.destroy({
+                force: true,
+                transaction: t
+            })
+            const data = await Operation.getData(targetId, type)
+            await art.decrement('likeNums', {
+                by: 1,
+                transaction: t
+            })
+        })
     }
 }
 

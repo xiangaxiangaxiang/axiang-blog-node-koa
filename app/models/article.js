@@ -47,6 +47,10 @@ Article.init({
     content: {
         type: Sequelize.TEXT('long'),
         require: true
+    },
+    likeNums: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
     }
 }, {
     sequelize,

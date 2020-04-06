@@ -14,6 +14,24 @@ const UserType = {
     isThisType
 }
 
+// 动态类型
+const PostType = {
+    isThisType,
+    VIDEO: 100,
+    PICTURE: 200,
+    ARTICLE: 300
+}
+
+// 操作类型
+const OperationType = {
+    isThisType,
+    ARTICLE: 100,
+    POST: 200,
+    COMMENT: 300
+}
+
 module.exports = {
-    UserType
+    UserType,
+    PostType,
+    OperationType
 }
