@@ -63,9 +63,28 @@ class Comment extends Model {
         const comments = await Comment.findAll({
             where: {
                 targetId
-            }
+            },
+            order: [
+                ['updated_at', 'DESC']
+            ]
         })
         return comments
+        // 创建commentId数据和新数组用来整合数据
+        const commentIdArr = []
+        const dataArr = []
+        for (let i = 0;i < comments.length;i++) {
+            let commentId = comments[i].commentId
+            let index = commentIdArr.indexOf(commentId)
+            let comment = comments[i]
+            if (index < 0) {
+                comment['comments'] = []
+                dataArr.push(comment)
+                commentIdArr.push(commentId)
+            } else {
+                commentIdArr[index].comments.push(comment)
+            }
+        }
+        return commentIdArr
     }
 }
 
