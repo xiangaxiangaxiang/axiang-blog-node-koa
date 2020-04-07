@@ -68,7 +68,7 @@ class Comment extends Model {
                 ['updated_at', 'DESC']
             ]
         })
-        return comments
+        // return comments
         // 创建commentId数据和新数组用来整合数据
         const commentIdArr = []
         const dataArr = []
@@ -77,14 +77,23 @@ class Comment extends Model {
             let index = commentIdArr.indexOf(commentId)
             let comment = comments[i]
             if (index < 0) {
-                comment['comments'] = []
-                dataArr.push(comment)
+                const topComment = {
+                    id: comment.id,
+                    commentId: comment.commentId,
+                    targetId: comment.targetId,
+                    content: comment.content,
+                    userInfo: comment.userInfo,
+                    replyUserInfo: comment.replyUserInfo,
+                    likeNums: comment.likeNums,
+                    comments: []
+                }
+                dataArr.push(topComment)
                 commentIdArr.push(commentId)
             } else {
-                commentIdArr[index].comments.push(comment)
+                dataArr[index].comments.push(comment)
             }
         }
-        return commentIdArr
+        return dataArr
     }
 }
 
