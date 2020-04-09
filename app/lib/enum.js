@@ -30,8 +30,15 @@ const OperationType = {
     COMMENT: 300
 }
 
+const NotificationType = {
+    isThisType,
+    COMMENT: 100,
+    LIKE: 200
+}
+
 module.exports = {
     UserType,
     PostType,
-    OperationType
+    OperationType,
+    NotificationType
 }

@@ -1,10 +1,12 @@
 const {Sequelize, Model} = require('sequelize')
 const { sequelize } = require('../../core/db')
 const {Operation} = require('./operation')
+const {Notification} = require('./notification')
+const {NotificationType} = require('../lib/enum')
 
 class Like extends Model {
-    
-    static async like(targetId, type, uid) {
+
+    static async like(targetId, type, uid, replyUserId) {
         const likeItem = await Like.findOne({
             where: {
                 targetId,
@@ -21,15 +23,16 @@ class Like extends Model {
                 type,
                 uid
             }, {transaction: t})
+            await Notification.addNotification(targetId, type, NotificationType.LIKE, uid, replyUserId)
             const data = await Operation.getData(targetId, type)
-            await art.increment('likeNums', {
+            await data.increment('likeNums', {
                 by: 1,
                 transaction: t
             })
         })
     }
 
-    static async dislike(targetId, type, uid) {
+    static async dislike(targetId, type, uid, replyUserId) {
         const likeItem = await Like.findOne({
             where: {
                 targetId,
@@ -46,8 +49,9 @@ class Like extends Model {
                 force: true,
                 transaction: t
             })
+            await Notification.cancellationNotice(targetId, type, uid, replyUserId)
             const data = await Operation.getData(targetId, type)
-            await art.decrement('likeNums', {
+            await data.decrement('likeNums', {
                 by: 1,
                 transaction: t
             })

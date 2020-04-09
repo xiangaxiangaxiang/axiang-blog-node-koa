@@ -1,7 +1,10 @@
 const {Sequelize, Model} = require('sequelize')
+
 const { sequelize } = require('../../core/db')
 const {User} = require('@models/user')
 const {randomStr} = require('../lib/random')
+const {Notification} = require('./notification')
+const {NotificationType} = require('../lib/enum')
 
 class Comment extends Model {
     static async addComment(targetId, content, uid, commentId, replyUserId) {
@@ -23,7 +26,7 @@ class Comment extends Model {
             userInfo: JSON.stringify(userInfo),
             replyUserInfo: JSON.stringify(replyUserInfo)
         }
-
+        await Notification.addNotification(targetId, type, NotificationType.COMMENT, uid, replyUserId)
         Comment.create(comment)
     }
 
