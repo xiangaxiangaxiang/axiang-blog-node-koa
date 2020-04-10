@@ -1,5 +1,6 @@
 const {Sequelize, Model} = require('sequelize')
 const { sequelize } = require('../../core/db')
+const {NotificationType} = require('../lib/enum')
 
 class Notification extends Model {
 
@@ -44,6 +45,50 @@ class Notification extends Model {
             userId
         }
         Notification.create(notification)
+    }
+
+    static async getNotification(uid) {
+        const likes = await Notification.findAll({
+            where: {
+                userId: uid,
+                type: NotificationType.LIKE
+            },
+            order: [
+                ['created_at', 'DESC']
+            ]
+        })
+        const comments = await Notification.findAll({
+            where: {
+                userId: uid,
+                type: NotificationType.COMMENT
+            }
+        })
+        const res = {
+            likeNums: likes.length,
+            lastLikeUser: likes[0] ? JSON.parse(likes[0].operationUserInfo),
+            commentList: []
+        }
+        for (let i = 0; i< comments.length; i++) {
+            let comment = comments[i]
+            let item = {
+                targetId: comment.targetId,
+                targetType: comment.targetType,
+                operationUserInfo: JSON.parse(comment.operationUserInfo)
+            }
+            res.commentList.push(item)
+        }
+        return res
+    }
+
+    static async read(uid, type) {
+        await Notification.update({
+            unread: 0
+        }, {
+            where: {
+                userId: uid,
+                type
+            }
+        })
     }
 }
 

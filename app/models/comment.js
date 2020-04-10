@@ -62,6 +62,7 @@ class Comment extends Model {
         comment.update({content: '该评论已被删除'})
     }
 
+    
     async getComment(targetId) {
         const comments = await Comment.findAll({
             where: {
