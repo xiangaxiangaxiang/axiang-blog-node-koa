@@ -66,17 +66,17 @@ class Notification extends Model {
         const res = {
             likeNums: likes.length,
             lastLikeUser: likes[0] ? JSON.parse(likes[0].operationUserInfo),
-            commentList: []
+            comments: comments
         }
-        for (let i = 0; i< comments.length; i++) {
-            let comment = comments[i]
-            let item = {
-                targetId: comment.targetId,
-                targetType: comment.targetType,
-                operationUserInfo: JSON.parse(comment.operationUserInfo)
-            }
-            res.commentList.push(item)
-        }
+        // for (let i = 0; i< comments.length; i++) {
+        //     let comment = comments[i]
+        //     let item = {
+        //         targetId: comment.targetId,
+        //         targetType: comment.targetType,
+        //         operationUserInfo: JSON.parse(comment.operationUserInfo)
+        //     }
+        //     res.commentList.push(item)
+        // }
         return res
     }
 

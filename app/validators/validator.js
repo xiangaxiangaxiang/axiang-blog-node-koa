@@ -183,6 +183,16 @@ class CommentValidator extends LinValidator {
     }
 }
 
+// id 检测
+class IdValidator extends LinValidator {
+    constructor() {
+        super()
+        this.id = [
+            new Rule('isInt', 'ID是必须参数')
+        ]
+    }
+}
+
 module.exports = {
     RegisterValidator,
     LoginValidator,
@@ -192,5 +202,6 @@ module.exports = {
     AddArticleValidator,
     ModifyArticleValidator,
     LikeValidator,
-    CommentValidator
+    CommentValidator,
+    IdValidator
 }
