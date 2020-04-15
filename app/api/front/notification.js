@@ -3,7 +3,7 @@ const Router = require('koa-router')
 const {Notification} = require('@models/notification')
 
 const router = new Router({
-    prefix: '/back/notification'
+    prefix: '/front/notification'
 })
 
 router.get('/notification', new Auth().user, async (ctx) => {
