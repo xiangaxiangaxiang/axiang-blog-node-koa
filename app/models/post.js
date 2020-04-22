@@ -1,7 +1,16 @@
 const {Sequelize, Model} = require('sequelize')
 const { sequelize } = require('../../core/db')
 
-class Post extends Model {}
+class Post extends Model {
+    static async addPost(content, urls, type) {
+        const data = {
+            content,
+            urls,
+            type
+        }
+        await Post.create(data)
+    }
+}
 
 Post.init({
     id: {

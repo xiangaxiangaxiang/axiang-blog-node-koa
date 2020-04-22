@@ -1,5 +1,6 @@
 const {LinValidator, Rule} = require('../../core/lin-validator')
 const {User} = require('@models/user')
+const { PostType } = require('../lib/enum')
 
 // 创建用户
 class RegisterValidator extends LinValidator {
@@ -193,6 +194,24 @@ class IdValidator extends LinValidator {
     }
 }
 
+class PostValidator extends LinValidator{
+    constructor() {
+        this.content = [
+            new Rule('isOptional', ''),
+            new Rule('isLength', '长度不能超过144个字', {max: 144})
+        ]
+        this.type = [
+            new Rule('isInt', 'type参数类型必须为数字')
+        ]
+    }
+    validateType(vals) {
+        const type = vals.body.type
+        if (!PostType.isThisType(type)) {
+            throw new Error('非法类型')
+        }
+    }
+}
+
 module.exports = {
     RegisterValidator,
     LoginValidator,
@@ -203,5 +222,6 @@ module.exports = {
     ModifyArticleValidator,
     LikeValidator,
     CommentValidator,
-    IdValidator
+    IdValidator,
+    PostValidator
 }
