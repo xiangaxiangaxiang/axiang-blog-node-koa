@@ -10,6 +10,18 @@ class Post extends Model {
         }
         await Post.create(data)
     }
+
+    static async deletePost(id) {
+        const post = await Post.findOne({
+            where: {
+                id
+            }
+        })
+        if (!post) {
+            throw new global.errs.NotFound('找不到该动态')
+        }
+        await post.destroy()
+    }
 }
 
 Post.init({

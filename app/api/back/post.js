@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 
-const {PostValidator} = require('@validator')
+const {PostValidator, IdValidator} = require('@validator')
 const {Post} = require('@models/post')
 const {upload} = require('../../lib/upload')
 
@@ -29,6 +29,13 @@ router.post('/add', new Auth().admin, async (ctx) => {
     upload(saveList)
 
     await Post.addPost(content, urls, type)
+    throw new global.errs.Success()
+})
+
+router.post('/delete', new Auth().admin, async (ctx) => {
+    const v = await new IdValidator().validate(ctx)
+    const id = v.get('body.id')
+    await Post.deletePost(id)
     throw new global.errs.Success()
 })
 
