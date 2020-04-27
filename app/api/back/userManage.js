@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 
-const {User} = require('@models/user')
-const {IdValidator} = require('@validator')
+const { User } = require('@models/user')
+const { IdValidator, PaginationsValidator } = require('@validator')
 
 const router = new Router({
     prefix: '/back/user'
@@ -11,6 +11,20 @@ const router = new Router({
 
 router.get('/', new Auth().admin, async (ctx) => {
     const v = await new PaginationsValidator().validate(ctx)
+    const offset = v.get('body.offset')
+    const limit = v.get('body.limit')
+    const sort = v.get('body.sort')
+    const order = v.get('body.order')
+    let users
+    if (sort && order) {
+        users = await User.getUserList(offset, limit, sort, order)
+    } else {
+        users = await User.getUserList(offset, limit)
+    }
+    ctx.body = {
+        data: users,
+        total: users.length
+    }
 })
 
 // 禁用用户

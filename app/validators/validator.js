@@ -212,6 +212,19 @@ class PostValidator extends LinValidator{
     }
 }
 
+// 分页校验
+class PaginationsValidator extends LinValidator {
+    constructor() {
+        super()
+        this.offset = [
+            new Rule('isInt', '参数不能为空')
+        ]
+        this.limit = [
+            new Rule('isInt', '参数不能为空')
+        ]
+    }
+}
+
 module.exports = {
     RegisterValidator,
     LoginValidator,
@@ -223,5 +236,6 @@ module.exports = {
     LikeValidator,
     CommentValidator,
     IdValidator,
-    PostValidator
+    PostValidator,
+    PaginationsValidator
 }

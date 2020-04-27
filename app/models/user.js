@@ -4,6 +4,17 @@ const { sequelize } = require('../../core/db')
 
 class User extends Model {
 
+    // 默认id升序排列
+    static async getUserList(offset, limit, sort='id', order='ASC') {
+        const offset = (pageIndex - 1) * pageSize
+        const users = await User.findAll({
+            offset,
+            limit,
+            order: [sort, order]
+        })
+        return users
+    }
+
     // 验证账号
     static async verifyAccount(account, password) {
         const user = await User.findOne({
