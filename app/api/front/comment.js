@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 
-const {CommentValidator} = require('@validator')
+const {CommentValidator, IdValidator} = require('@validator')
 const {Comment} = require('@models/comment')
 const {Auth} = require('@middlewares/auth')
 
@@ -22,7 +22,8 @@ router.post('/add', new Auth().user, async (ctx) => {
 })
 
 router.post('/delete', new Auth().user, async (ctx) => {
-    const id = ctx.request.body.id
+    const v = await new IdValidator().validate(ctx)
+    const id = v.get('body.id')
     const uid = ctx.auth.uid
     if (!id) {
         throw new global.errs.ParameterException()
