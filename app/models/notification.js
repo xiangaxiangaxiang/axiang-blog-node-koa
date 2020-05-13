@@ -65,7 +65,7 @@ class Notification extends Model {
         })
         const res = {
             likeNums: likes.length,
-            lastLikeUser: likes[0] ? JSON.parse(likes[0].operationUserInfo),
+            lastLikeUser: likes[0] ? JSON.parse(likes[0].operationUserInfo) : {},
             comments: comments
         }
         // for (let i = 0; i< comments.length; i++) {

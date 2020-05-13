@@ -2,6 +2,7 @@ const Router = require('koa-router')
 
 const { User } = require('@models/user')
 const { IdValidator, PaginationsValidator } = require('@validator')
+const {Auth} = require('@middlewares/auth')
 
 const router = new Router({
     prefix: '/back/user'

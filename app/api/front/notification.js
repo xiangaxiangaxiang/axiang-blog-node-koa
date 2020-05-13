@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 
 const {Notification} = require('@models/notification')
+const {Auth} = require('@middlewares/auth')
 
 const router = new Router({
     prefix: '/front/notification'
@@ -19,7 +20,7 @@ router.post('/read', new Auth().user, async (ctx) => {
         throw new global.errs.ParameterException()
     }
     await Notification.read(uid, type)
-    thow global.errs.success()
+    throw global.errs.success()
 })
 
 module.exports = router

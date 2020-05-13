@@ -3,6 +3,7 @@ const Router = require('koa-router')
 const {PostValidator, IdValidator} = require('@validator')
 const {Post} = require('@models/post')
 const {upload} = require('../../lib/upload')
+const {Auth} = require('@middlewares/auth')
 
 const router = new Router({
     prefix: '/back/post'

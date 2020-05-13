@@ -6,7 +6,6 @@ class User extends Model {
 
     // 默认id升序排列
     static async getUserList(offset, limit, sort='id', order='ASC') {
-        const offset = (pageIndex - 1) * pageSize
         const users = await User.findAll({
             offset,
             limit,
