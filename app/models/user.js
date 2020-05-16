@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const {Sequelize, Model} = require('sequelize')
 const { sequelize } = require('../../core/db')
+const { UserType } = require('../lib/enum')
 
 class User extends Model {
 
@@ -26,6 +27,29 @@ class User extends Model {
         }
         if (user.enable === 0) {
             throw new global.errs.AuthFailed('账号已被禁用')
+        }
+        const correct = bcrypt.compareSync(password, user.password)
+        if (!correct) {
+            throw new global.errs.AuthFailed('密码不正确')
+        }
+        return user
+    }
+
+    // 验证管理员账号
+    static async verifyAdmin(account, password) {
+        const user = await User.findOne({
+            where: {
+                account
+            }
+        })
+        if (!user) {
+            throw new global.errs.NotFound('账号不存在')
+        }
+        if (user.enable === 0) {
+            throw new global.errs.AuthFailed('账号已被禁用')
+        }
+        if (user.userType !== UserType.ADMIN) {
+            throw new global.errs.AuthFailed('该账号无权登陆')
         }
         const correct = bcrypt.compareSync(password, user.password)
         if (!correct) {
