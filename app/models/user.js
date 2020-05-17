@@ -5,6 +5,18 @@ const { UserType } = require('../lib/enum')
 
 class User extends Model {
 
+    static async createUser(userInfo) {
+        const user = await User.findOne({
+            where: {
+                account: userInfo.account
+            }
+        })
+        if (user) {
+            throw new global.errs.ParameterException('账号已被注册')
+        }
+        await User.create(userInfo)
+    }
+
     // 默认id升序排列
     static async getUserList(offset, limit, sort='id', order='ASC') {
         const users = await User.findAll({

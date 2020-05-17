@@ -13,7 +13,7 @@ app.use(catchError)
 // koa-body接受前端传过来的参数
 app.use(koaBody({
     multipart:true, // 支持文件上传
-    encoding:'gzip',
+    urlencoded: true,
     formidable:{
     //   uploadDir:path.join(__dirname,'public/upload/'), // 设置文件上传目录
       keepExtensions: true,    // 保持文件的后缀
@@ -21,7 +21,7 @@ app.use(koaBody({
       onFileBegin:(name,file) => { // 文件上传前的设置
         // console.log(`name: ${name}`);
         // console.log(file);
-      },
+      }
     }
   }));
 

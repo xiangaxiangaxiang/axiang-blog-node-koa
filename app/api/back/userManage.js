@@ -63,7 +63,7 @@ router.post('/admin_register', async (ctx) => {
         userType: UserType.ADMIN,
         avatar: avatarPath
     }
-    const result = await User.create(user)
+    const result = await User.createUser(user)
     throw new global.errs.Success()
 })
 
