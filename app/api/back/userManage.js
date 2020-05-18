@@ -9,6 +9,7 @@ const {
 const {Auth} = require('@middlewares/auth')
 const {upload} = require('../../lib/upload')
 const {generateToken} = require('@core/util')
+const { UserType } = require('../../lib/enum')
 
 const router = new Router({
     prefix: '/back/user'
@@ -118,3 +119,5 @@ router.post('/enable', new Auth().admin, async (ctx) => {
     })
     throw new global.errs.Success()
 })
+
+module.exports = router
