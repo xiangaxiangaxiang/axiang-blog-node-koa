@@ -4,7 +4,8 @@ const { User } = require('@models/user')
 const {
     IdValidator,
     PaginationsValidator,
-    AdminRegisterValidator
+    AdminRegisterValidator,
+    LoginValidator
 } = require('@validator')
 const {Auth} = require('@middlewares/auth')
 const {upload} = require('../../lib/upload')
