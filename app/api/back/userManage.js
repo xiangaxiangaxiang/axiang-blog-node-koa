@@ -26,12 +26,13 @@ router.post('/admin_login', async (ctx) => {
     // 生成token
     const token = generateToken(user.id, user.userType)
     user.setDataValue('token', token)
-    ctx.body = {
+    const res = {
         token,
         id: user.id,
         nickname: user.nickname,
         avatar: user.avatar
     }
+    throw new global.errs.Success(res)
 })
 
 // 管理员注册

@@ -20,6 +20,9 @@ const catchError = async (ctx, next) => {
                 status: error.errorCode,
                 request: requestUrl
             }
+            if (error.data) {
+                ctx.body.data = error.data
+            }
             ctx.status = error.code
         } else { 
             // 未知错误
