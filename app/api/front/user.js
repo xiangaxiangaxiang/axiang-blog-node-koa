@@ -9,6 +9,7 @@ const {
 } = require('@validator')
 
 const {User} = require('@models/user')
+const { Statistics } = require('@models/statistics')
 const {UserType} = require('../../lib/enum')
 const {upload} = require('../../lib/upload')
 const {generateToken} = require('@core/util')
@@ -18,7 +19,10 @@ const router = new Router({
     prefix: '/front/user'
 })
 
-
+router.get('/tourist', new Auth().tourist, async (ctx) => {
+    await Statistics.addWebHits()
+    throw new global.errs.Success()
+})
 
 // 修改用户信息
 router.post('/update', new Auth().user, async (ctx) => {

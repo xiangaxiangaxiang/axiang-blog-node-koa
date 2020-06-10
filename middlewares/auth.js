@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 
 class Auth {
     constructor() {
-        Auth.USER = 1
+        Auth.USER = 99
         Auth.ADMIN = 199
     }
 
@@ -46,6 +46,27 @@ class Auth {
     }
 
     get user() {
+        return async (ctx, next) => {
+
+            const userToken = basicAuth(ctx.req)
+            
+            let decode = this._verifyToken(userToken)
+
+            if (decode.userType < Auth.USER) {
+                const errMsg = '权限不足'
+                throw new global.errs.Forbbiden(errMsg)
+            }
+
+            ctx.auth = {
+                uid: decode.uid,
+                userType: decode.userType
+            }
+
+            await next()
+        }
+    }
+
+    get tourist() {
         return async (ctx, next) => {
 
             const userToken = basicAuth(ctx.req)
