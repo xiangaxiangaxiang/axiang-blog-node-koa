@@ -9,6 +9,7 @@ function isThisType(val) {
 
 // 用户类型
 const UserType = {
+    TOURIST: 10,
     USER: 100,
     ADMIN: 200,
     isThisType

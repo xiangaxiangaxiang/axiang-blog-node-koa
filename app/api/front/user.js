@@ -21,7 +21,21 @@ const router = new Router({
 
 router.get('/tourist', new Auth().tourist, async (ctx) => {
     await Statistics.addWebHits()
-    throw new global.errs.Success()
+    const newUser = {
+        avatarPath: 
+        account: `tourist${Date.now()}`,
+        password: 'tourist',
+        nickname: `游客-${Date.now()}`,
+        userType: UserType.TOURIST,
+        avatar: `/img/avatar/default_${ Math.floor(Math.random() * 5) + 1 }.jpg`
+    }
+    let res = {}
+    if (ctx.tourist && (ctx.tourist.newTourist || ctx.tourist.expires)) {
+        const user = await User.createUser(newUser)
+        const token = generateTouristToken(user.id, UserType.TOURIST)
+        res = {token}
+    }
+    throw new global.errs.Success(res)
 })
 
 // 修改用户信息
