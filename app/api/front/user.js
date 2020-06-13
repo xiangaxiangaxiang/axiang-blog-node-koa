@@ -22,7 +22,6 @@ const router = new Router({
 router.get('/tourist', new Auth().tourist, async (ctx) => {
     await Statistics.addWebHits()
     const newUser = {
-        avatarPath: 
         account: `tourist${Date.now()}`,
         password: 'tourist',
         nickname: `游客-${Date.now()}`,
