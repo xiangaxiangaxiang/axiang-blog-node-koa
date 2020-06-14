@@ -19,12 +19,16 @@ class User extends Model {
 
     // 默认id升序排列
     static async getUserList(offset, limit, sort='id', order='ASC') {
-        const users = await User.findAll({
+        const userList = await User.findAll({
             offset,
             limit,
-            order: [sort, order]
+            order: [[sort, order]]
         })
-        return users
+        const total = await User.count()
+        return {
+            userList,
+            total
+        }
     }
 
     // 验证账号
@@ -48,7 +52,7 @@ class User extends Model {
     }
 
     // 验证管理员账号
-    static async verifyAdmin(account, password) {
+    static async verifyAdmin(account, password) { 
         const user = await User.findOne({
             where: {
                 account
