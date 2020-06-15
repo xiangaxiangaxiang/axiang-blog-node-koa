@@ -70,19 +70,30 @@ class Auth {
         return async (ctx, next) => {
 
             const userToken = basicAuth(ctx.req)
+
+            if (!userToken || !userToken.name) {
+                ctx.tourist = {
+                    newTourist: true
+                }
+            } else {
+                try {
+                    // 解码token
+                    var decode = jwt.verify(userToken.name, global.config.security.secretKey)
+                    ctx.auth = {
+                        uid: decode.uid,
+                        userType: decode.userType
+                    }
+                } catch (error) {
+                    if (error.name == 'TokenExpireError') {
+                        errMsg = 'token已过期'
+                        ctx.tourist = {
+                            newTourist: false,
+                            expires: true
+                        }
+                    }
+                }
+            }
             
-            let decode = this._verifyToken(userToken)
-
-            if (decode.userType < Auth.USER) {
-                const errMsg = '权限不足'
-                throw new global.errs.Forbbiden(errMsg)
-            }
-
-            ctx.auth = {
-                uid: decode.uid,
-                userType: decode.userType
-            }
-
             await next()
         }
     }

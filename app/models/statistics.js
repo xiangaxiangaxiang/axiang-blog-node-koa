@@ -5,6 +5,57 @@ const { stampToStr } = require('@core/util')
 
 class Statistics extends Model {
 
+    static async getTotal() {
+        const webHitsTotal = await Statistics.sum('webHits')
+        const likesTotal = await Statistics.sum('likes')
+        const commentsTotal = await Statistics.sum('comments')
+        const articleHitsTotal = await Statistics.sum('articleHits')
+
+        return {
+            webHitsTotal,
+            likesTotal,
+            commentsTotal,
+            articleHitsTotal
+        }
+    }
+
+    static async getMonthlyStatistics() {
+        const statistics = await Statistics.findAll({
+            order: [['created_at', 'DESC']],
+            limit: 30
+        })
+        const webHits = statistics.map(item => {
+            return {
+                nums: item.webHits,
+                date: item.date
+            }
+        })
+        const likes = statistics.map(item => {
+            return {
+                nums: item.likes,
+                date: item.date
+            }
+        })
+        const comments = statistics.map(item => {
+            return {
+                nums: item.comments,
+                date: item.date
+            }
+        })
+        const articleHits = statistics.map(item => {
+            return {
+                nums: item.articleHits,
+                date: item.date
+            }
+        })
+        return {
+            webHits,
+            likes,
+            comments,
+            articleHits
+        }
+    }
+
     static getStrTime(time=null) {
         return stampToStr(time ? time : Date.now())
     }
@@ -99,3 +150,7 @@ Statistics.init({
     sequelize,
     tableName: 'statistics'
 })
+
+module.exports = {
+    Statistics
+}

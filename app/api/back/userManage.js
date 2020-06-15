@@ -25,7 +25,6 @@ router.post('/admin_login', async (ctx) => {
     const user = await User.verifyAdmin(account, password)
     // 生成token
     const token = generateToken(user.id, user.userType)
-    user.setDataValue('token', token)
     const res = {
         token,
         id: user.id,
@@ -74,20 +73,17 @@ router.post('/admin_register', async (ctx) => {
 
 router.get('/', new Auth().admin, async (ctx) => {
     const v = await new PaginationsValidator().validate(ctx)
-    const offset = v.get('body.offset')
-    const limit = v.get('body.limit')
-    const sort = v.get('body.sort')
-    const order = v.get('body.order')
-    let users
+    const offset = v.get('query.offset')
+    const limit = v.get('query.limit')
+    const sort = v.get('query.sort')
+    const order = v.get('query.order')
+    let data
     if (sort && order) {
-        users = await User.getUserList(offset, limit, sort, order)
+        data = await User.getUserList(offset, limit, sort, order)
     } else {
-        users = await User.getUserList(offset, limit)
+        data = await User.getUserList(offset, limit)
     }
-    ctx.body = {
-        data: users,
-        total: users.length
-    }
+    throw new global.errs.Success(data)
 })
 
 // 禁用用户

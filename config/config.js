@@ -9,7 +9,8 @@ module.exports = {
     },
     security: {
         secretKey: 'lalalalalaldemaxiya',
-        expiresIn: 60*60*24
+        expiresIn: 60*60*24,
+        touristExpiryIn: 60*60*3
     },
     ftp: {
         host: 'localhost',

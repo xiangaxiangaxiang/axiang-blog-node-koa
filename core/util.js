@@ -32,19 +32,35 @@ const findMembers = function(instance, { prefix, specifiedType, filter }) {
 };
 
 const generateToken = function(uid, userType) {
-  const secretKey = global.config.security.secretKey;
-  const expiresIn = global.config.security.expiresIn;
-  const token = jwt.sign(
-    {
-      uid,
-      userType
-    },
-    secretKey,
-    {
-      expiresIn
-    }
-  );
-  return token;
+    const secretKey = global.config.security.secretKey;
+    const expiresIn = global.config.security.expiresIn;
+    const token = jwt.sign(
+        {
+        uid,
+        userType
+        },
+        secretKey,
+        {
+        expiresIn
+        }
+    )
+    return token
+}
+
+const generateTouristToken = function(uid, userType) {
+    const secretKey = global.config.security.secretKey;
+    const expiresIn = global.config.security.touristExpiryIn;
+    const token = jwt.sign(
+        {
+            uid,
+            userType
+        },
+        secretKey,
+        {
+            expiresIn
+        }
+    )
+    return token
 }
 
 const stampToStr = function (stamp, accuracy = 'second') {
