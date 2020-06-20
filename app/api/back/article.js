@@ -5,12 +5,26 @@ const {upload} = require('../../lib/upload')
 const {Auth} = require('@middlewares/auth')
 const {
     AddArticleValidator,
-    ModifyArticleValidator
+    ModifyArticleValidator,
+    PaginationsValidator
 } = require('@validator')
 const {Article} = require('@models/article')
 
 const router = new Router({
     prefix: '/back/article'
+})
+
+router.get('/', new Auth().admin, async ctx => {
+    const v = await PaginationsValidator().validate(ctx)
+
+    const offset = v.get('query.offset')
+    const limit = v.get('query.limit')
+    const searchText = v.get('query.searchText')
+    const label = v.get('query.label')
+
+    const res = await Article.getArticles(offset, limit, searchText, label)
+
+    throw new global.errs.Success(res)
 })
 
 router.post('/image_upload', new Auth().admin, async (ctx) => {
@@ -35,7 +49,7 @@ router.post('/image_upload', new Auth().admin, async (ctx) => {
     }
 })
 
-router.post('/add', new Auth().admin,async (ctx) => {
+router.post('/add', new Auth().admin, async (ctx) => {
     const v = await new AddArticleValidator().validate(ctx)
 
     // 获取参数

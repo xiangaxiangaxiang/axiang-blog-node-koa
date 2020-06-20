@@ -1,7 +1,36 @@
-const {Sequelize, Model} = require('sequelize')
+const {Sequelize, Model, Op} = require('sequelize')
 const { sequelize } = require('../../core/db')
 
 class Article extends Model {
+
+    static async getArticles(offset, limit, searchText, label) {
+        let query = {
+            offset,
+            limit
+        }
+        let filter = {}
+        if (searchText) {
+            filter.title = {
+                [Op.like]: `%${searchText}%`
+            }
+        }
+        if (label) {
+            filter.labels = {
+                [Op.like]: `%${searchText}%`
+            }
+        }
+        
+        const total = await Article.count({
+            where: filter
+        })
+        const articles = await Article.findAll(Object.assign({}, query, filter))
+
+        return {
+            total,
+            articles
+        }
+    }
+
     // 删除文章
     static async deleteArticle(id) {
         const article = await Article.findOne({

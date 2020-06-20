@@ -32,7 +32,6 @@ Model.prototype.toJSON = function() {
     unset(data, 'updated_at')
     unset(data, 'deleted_at')
     unset(data, 'deletedAt')
-
     if (isArray(this.exclude)) {
         this.exclude.forEach(item => {
             unset(data, item)
