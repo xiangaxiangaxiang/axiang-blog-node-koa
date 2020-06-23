@@ -37,9 +37,17 @@ const NotificationType = {
     LIKE: 200
 }
 
+const ArticleType = {
+    isThisType,
+    TECHNICAL: 100,
+    LIFE: 200,
+    DREAM: 300
+}
+
 module.exports = {
     UserType,
     PostType,
     OperationType,
-    NotificationType
+    NotificationType,
+    ArticleType
 }

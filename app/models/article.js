@@ -72,11 +72,17 @@ Article.init({
         type: Sequelize.INTEGER,
         require: true
     },
-    labels: Sequelize.STRING,
+    labels: {
+        type: Sequelize.STRING,
+        get() {
+            return JSON.stringify(this.getDataValue('labels'))
+        }
+    },
     content: {
         type: Sequelize.TEXT('long'),
         require: true
     },
+    publish: Sequelize.INTEGER,
     likeNums: {
         type: Sequelize.INTEGER,
         defaultValue: 0
