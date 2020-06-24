@@ -6,7 +6,8 @@ const {Auth} = require('@middlewares/auth')
 const {
     AddArticleValidator,
     ModifyArticleValidator,
-    PaginationsValidator
+    PaginationsValidator,
+    ArticlePublishValidator
 } = require('@validator')
 const {Article} = require('@models/article')
 
@@ -15,7 +16,7 @@ const router = new Router({
 })
 
 router.get('/', new Auth().admin, async ctx => {
-    const v = await PaginationsValidator().validate(ctx)
+    const v = await new PaginationsValidator().validate(ctx)
 
     const offset = v.get('query.offset')
     const limit = v.get('query.limit')
@@ -69,6 +70,16 @@ router.post('/add', new Auth().admin, async (ctx) => {
     ctx.body = {
         result
     }
+})
+
+router.post('/publish', new Auth().admin, async ctx => {
+    const v = await new ArticlePublishValidator().validate(ctx)
+
+    const id = v.get('body.id')
+    const publish = v.get('body.publish')
+
+    await Article.changePublish(id, publish)
+    throw new global.errs.Success()
 })
 
 router.post('/modify', new Auth().admin, async (ctx) => {

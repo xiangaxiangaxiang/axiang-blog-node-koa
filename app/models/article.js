@@ -56,6 +56,19 @@ class Article extends Model {
         }
         await article.update(newArticle)
     }
+
+    // 修改发布状态
+    static async changePublish(id, publish) {
+        const article = await Article.findOne({
+            where: {
+                id
+            }
+        })
+        if (!article) {
+            throw new global.errs.NotFound('文章不存在')
+        }
+        await article.update({publish})
+    }
 }
 
 Article.init({
@@ -75,7 +88,7 @@ Article.init({
     labels: {
         type: Sequelize.STRING,
         get() {
-            return JSON.stringify(this.getDataValue('labels'))
+            return JSON.parse(this.getDataValue('labels'))
         }
     },
     content: {

@@ -212,7 +212,7 @@ class PostValidator extends LinValidator{
     }
 }
 
-// 分页校验
+// 文章发布状态校验
 class PaginationsValidator extends LinValidator {
     constructor() {
         super()
@@ -220,6 +220,19 @@ class PaginationsValidator extends LinValidator {
             new Rule('isInt', '参数不能为空')
         ]
         this.limit = [
+            new Rule('isInt', '参数不能为空')
+        ]
+    }
+}
+
+// 分页校验
+class ArticlePublishValidator extends LinValidator {
+    constructor() {
+        super()
+        this.id = [
+            new Rule('isInt', '参数不能为空')
+        ]
+        this.publish = [
             new Rule('isInt', '参数不能为空')
         ]
     }
@@ -237,5 +250,6 @@ module.exports = {
     CommentValidator,
     IdValidator,
     PostValidator,
-    PaginationsValidator
+    PaginationsValidator,
+    ArticlePublishValidator
 }
