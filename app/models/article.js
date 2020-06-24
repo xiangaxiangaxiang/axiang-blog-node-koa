@@ -20,10 +20,8 @@ class Article extends Model {
             }
         }
         
-        const total = await Article.count({
-            where: filter
-        })
-        const articles = await Article.findAll(Object.assign({}, query, filter))
+        const total = await Article.count(searchText || label ? {where: filter} : {})
+        const articles = await Article.findAll(Object.assign({}, query, searchText || label ? {where: filter} : {}))
 
         return {
             total,
