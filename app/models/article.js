@@ -89,8 +89,16 @@ Article.init({
             return JSON.parse(this.getDataValue('labels'))
         }
     },
-    content: {
+    html: {
         type: Sequelize.TEXT('long'),
+        require: true
+    },
+    markdown: {
+        type: Sequelize.TEXT('long'),
+        require: true
+    },
+    content: {
+        type: Sequelize.STRING(300),
         require: true
     },
     publish: Sequelize.INTEGER,
