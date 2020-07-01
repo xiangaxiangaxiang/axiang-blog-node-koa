@@ -44,10 +44,17 @@ const ArticleType = {
     DREAM: 300
 }
 
+const CommentType = {
+    isThisType,
+    ARTICLE: 100,
+    POST: 200
+}
+
 module.exports = {
     UserType,
     PostType,
     OperationType,
     NotificationType,
-    ArticleType
+    ArticleType,
+    CommentType
 }

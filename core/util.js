@@ -36,12 +36,12 @@ const generateToken = function(uid, userType) {
     const expiresIn = global.config.security.expiresIn;
     const token = jwt.sign(
         {
-        uid,
-        userType
+            uid,
+            userType
         },
         secretKey,
         {
-        expiresIn
+            expiresIn
         }
     )
     return token
@@ -88,7 +88,8 @@ const stampToStr = function (stamp, accuracy = 'second') {
 module.exports = {
     findMembers,
     generateToken,
-    stampToStr
+    stampToStr,
+    generateTouristToken
 }
 
 // const generateToken = function (uid, scope) {

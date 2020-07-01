@@ -1,6 +1,6 @@
 const {LinValidator, Rule} = require('../../core/lin-validator')
 const {User} = require('@models/user')
-const { PostType } = require('../lib/enum')
+const { PostType, CommentType } = require('../lib/enum')
 
 // 创建用户
 class RegisterValidator extends LinValidator {
@@ -173,6 +173,9 @@ class CommentValidator extends LinValidator {
         super()
         this.targetId = [
             new Rule('isInt', 'targetId是必须参数')
+        ]
+        this.targetTitle = [
+            new Rule('isInt', 'targetTitle是必须参数')
         ]
         this.content = [
             new Rule('isLength', '评论超过最大长度', {min: 1, max: 256})
