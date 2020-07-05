@@ -134,11 +134,10 @@ Comment.init({
         type: Sequelize.STRING,
         require: true,
     },
-    targetTitle: Sequelize.STRING,
     targetId: Sequelize.INTEGER,
     content: Sequelize.STRING,
-    userInfo: Sequelize.STRING,
-    replyUserInfo: Sequelize.STRING,
+    userId: Sequelize.INTEGER,
+    replyUserId: Sequelize.INTEGER,
     isDeleted: {
         type: Sequelize.INTEGER,
         defaultValue: 0

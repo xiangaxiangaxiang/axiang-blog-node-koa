@@ -104,11 +104,10 @@ Notification.init({
     // 评论还是点赞
     type: Sequelize.INTEGER,
     operationUserId: Sequelize.INTEGER,
-    operationUserInfo: Sequelize.STRING,
     userId: Sequelize.INTEGER,
     unread: {
         type: Sequelize.INTEGER,
-        // 默认为1，未读为0
+        // 默认为1，已读为0
         defaultValue: 1
     }
 }, {

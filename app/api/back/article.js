@@ -57,19 +57,23 @@ router.post('/add', new Auth().admin, async (ctx) => {
     const title = v.get('body.title')
     const labels = v.get('body.labels')
     const articleType = v.get('body.articleType')
-    let content = v.get('body.content')
+    const html = v.get('body.html')
+    const markdown = v.get('body.markdown')
+    const content = v.get('body.content')
+    const publish = v.get('body.publish')
 
     const article = {
         title,
         labels,
         articleType,
-        content: xss(content)
+        markdown,
+        publish,
+        content,
+        html: xss(html)
     }
 
-    const result = await Article.create(article)
-    ctx.body = {
-        result
-    }
+    await Article.create(article)
+    throw new global.errs.Success()
 })
 
 router.post('/publish', new Auth().admin, async ctx => {

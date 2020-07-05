@@ -6,12 +6,12 @@ const {NotificationType} = require('../lib/enum')
 
 class Like extends Model {
 
-    static async like(targetId, type, uid, replyUserId) {
+    static async like(targetId, type, userId, replyUserId) {
         const likeItem = await Like.findOne({
             where: {
                 targetId,
                 type,
-                uid
+                userId
             }
         })
         if (likeItem) {
@@ -21,9 +21,9 @@ class Like extends Model {
             await Like.create({
                 targetId,
                 type,
-                uid
+                userId
             }, {transaction: t})
-            await Notification.addNotification(targetId, type, NotificationType.LIKE, uid, replyUserId)
+            await Notification.addNotification(targetId, type, NotificationType.LIKE, userId, replyUserId)
             const data = await Operation.getData(targetId, type)
             await data.increment('likeNums', {
                 by: 1,
@@ -32,12 +32,12 @@ class Like extends Model {
         })
     }
 
-    static async dislike(targetId, type, uid, replyUserId) {
+    static async dislike(targetId, type, userId, replyUserId) {
         const likeItem = await Like.findOne({
             where: {
                 targetId,
                 type,
-                uid
+                userId
             }
         })
         if (!likeItem) {
@@ -49,7 +49,7 @@ class Like extends Model {
                 force: true,
                 transaction: t
             })
-            await Notification.cancellationNotice(targetId, type, uid, replyUserId)
+            await Notification.cancellationNotice(targetId, type, userId, replyUserId)
             const data = await Operation.getData(targetId, type)
             await data.decrement('likeNums', {
                 by: 1,
@@ -60,7 +60,7 @@ class Like extends Model {
 }
 
 Like.init({
-    uid: Sequelize.INTEGER,
+    userId: Sequelize.INTEGER,
     targetId: Sequelize.INTEGER,
     type: Sequelize.INTEGER,
 }, {

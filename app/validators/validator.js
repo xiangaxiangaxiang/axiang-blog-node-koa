@@ -1,6 +1,6 @@
 const {LinValidator, Rule} = require('../../core/lin-validator')
 const {User} = require('@models/user')
-const { PostType, CommentType } = require('../lib/enum')
+const { PostType, CommentType, ArticleType } = require('../lib/enum')
 
 // 创建用户
 class RegisterValidator extends LinValidator {
@@ -140,6 +140,22 @@ class AddArticleValidator extends LinValidator {
         this.labels = [
             new Rule('isLength', '至少选择一个标签', {min: 1})
         ]
+        this.content = [
+            new Rule('isLength', '主要内容不能为空', {min: 1})
+        ]
+        this.html = [
+            new Rule('isLength', 'html不能为空', {min: 1})
+        ]
+        this.markdown = [
+            new Rule('isLength', 'markdown不能为空', {min: 1})
+        ]
+    }
+
+    validateArticleType(vals) {
+        const articleType = vals.body.articleType
+        if (!ArticleType.isThisType(articleType)) {
+            throw new Error('文章类型不正确')
+        }
     }
 }
 
