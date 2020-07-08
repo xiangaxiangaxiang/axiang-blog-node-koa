@@ -127,8 +127,8 @@ class AdminRegisterValidator extends RegisterValidator {
     }
 }
 
-// 添加文章
-class AddArticleValidator extends LinValidator {
+// 添加或修改文章
+class UpsertArticleValidator extends LinValidator {
     constructor() {
         super()
         this.title = [
@@ -149,6 +149,10 @@ class AddArticleValidator extends LinValidator {
         this.markdown = [
             new Rule('isLength', 'markdown不能为空', {min: 1})
         ]
+        this.id = [
+            new Rule('isOptional', ''),
+            new Rule('isInt', 'ID参数不合法')
+        ]
     }
 
     validateArticleType(vals) {
@@ -160,14 +164,14 @@ class AddArticleValidator extends LinValidator {
 }
 
 // 修改文章
-class ModifyArticleValidator extends AddArticleValidator {
-    constructor() {
-        super()
-        this.id = [
-            new Rule('isInt', 'Id是必须参数')
-        ]
-    }
-}
+// class ModifyArticleValidator extends AddArticleValidator {
+//     constructor() {
+//         super()
+//         this.id = [
+//             new Rule('isInt', 'Id是必须参数')
+//         ]
+//     }
+// }
 
 // 点赞判断
 class LikeValidator extends LinValidator{
@@ -263,8 +267,7 @@ module.exports = {
     NotEmptyValidator,
     UpdateUserValidator,
     AdminRegisterValidator,
-    AddArticleValidator,
-    ModifyArticleValidator,
+    UpsertArticleValidator,
     LikeValidator,
     CommentValidator,
     IdValidator,

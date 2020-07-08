@@ -4,7 +4,7 @@ const xss = require('xss')
 const {upload} = require('../../lib/upload')
 const {Auth} = require('@middlewares/auth')
 const {
-    AddArticleValidator,
+    UpsertArticleValidator,
     ModifyArticleValidator,
     PaginationsValidator,
     ArticlePublishValidator
@@ -48,8 +48,8 @@ router.post('/image_upload', new Auth().admin, async (ctx) => {
 
 })
 
-router.post('/add', new Auth().admin, async (ctx) => {
-    const v = await new AddArticleValidator().validate(ctx)
+router.post('/upsert', new Auth().admin, async (ctx) => {
+    const v = await new UpsertArticleValidator().validate(ctx)
 
     // 获取参数
     const title = v.get('body.title')
@@ -59,6 +59,7 @@ router.post('/add', new Auth().admin, async (ctx) => {
     const markdown = v.get('body.markdown')
     const content = v.get('body.content')
     const publish = v.get('body.publish')
+    const id = v.get('body.id')
 
     const article = {
         title,
@@ -70,7 +71,7 @@ router.post('/add', new Auth().admin, async (ctx) => {
         html: xss(html)
     }
 
-    await Article.create(article)
+    await Article.upsertArticle(id, article)
     throw new global.errs.Success()
 })
 
@@ -84,26 +85,26 @@ router.post('/publish', new Auth().admin, async ctx => {
     throw new global.errs.Success()
 })
 
-router.post('/modify', new Auth().admin, async (ctx) => {
-    const v = await new ModifyArticleValidator().validate(ctx)
+// router.post('/modify', new Auth().admin, async (ctx) => {
+//     const v = await new ModifyArticleValidator().validate(ctx)
 
-    // 获取参数
-    const id = v.get('body.id')
-    const title = v.get('body.title')
-    const labels = v.get('body.labels')
-    const articleType = v.get('body.articleType')
-    let content = v.get('body.content')
+//     // 获取参数
+//     const id = v.get('body.id')
+//     const title = v.get('body.title')
+//     const labels = v.get('body.labels')
+//     const articleType = v.get('body.articleType')
+//     let content = v.get('body.content')
 
-    const article = {
-        title,
-        labels,
-        articleType,
-        content: xss(content)
-    }
+//     const article = {
+//         title,
+//         labels,
+//         articleType,
+//         content: xss(content)
+//     }
 
-    await Article.updateArticle(id, article)
-    throw new global.errs.Success()
-})
+//     await Article.updateArticle(id, article)
+//     throw new global.errs.Success()
+// })
 
 router.post('/delete', new Auth().admin,async (ctx) => {
     const id = ctx.request.body.id

@@ -18,7 +18,7 @@ const sequelize = new Sequelize(dbName, user, password, {
         scopes: {
             bh: {
                 attributes: {
-                    exclude: ['updated_at', 'deleted_at', 'created_at', 'deletedAt']
+                    exclude: ['deleted_at', 'deletedAt']
                 }
             }
         }
@@ -28,8 +28,6 @@ const sequelize = new Sequelize(dbName, user, password, {
 Model.prototype.toJSON = function() {
     let data = clone(this.dataValues)
     // 下面几个字段不返回到前端
-    unset(data, 'created_at')
-    unset(data, 'updated_at')
     unset(data, 'deleted_at')
     unset(data, 'deletedAt')
     if (isArray(this.exclude)) {

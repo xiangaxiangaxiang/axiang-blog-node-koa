@@ -6,7 +6,8 @@ class Article extends Model {
     static async getArticles(offset, limit, searchText, label) {
         let query = {
             offset,
-            limit
+            limit,
+            order: [['updated_at', 'DESC']]
         }
         let filter = {}
         if (searchText) {
@@ -66,6 +67,28 @@ class Article extends Model {
             throw new global.errs.NotFound('文章不存在')
         }
         await article.update({publish})
+    }
+
+    static async upsertArticle(id, articleObj) {
+        if (id) {
+            const article = await Article.findOne({
+                where: { id }
+            })
+            if (!article) {
+                throw new global.errs.NotFound('文章不存在')
+            }
+            article.update(articleObj)
+        } else {
+            const article = await Article.findOne({
+                where: {
+                    title: articleObj.title
+                }
+            })
+            if (article) {
+                throw new global.errs.ParameterException(['文章标题已存在'])
+            }
+            await Article.create(articleObj)
+        }
     }
 }
 
