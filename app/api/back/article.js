@@ -60,6 +60,7 @@ router.post('/upsert', new Auth().admin, async (ctx) => {
     const content = v.get('body.content')
     const publish = v.get('body.publish')
     const id = v.get('body.id')
+    const firstImage = v.get('body.firstImage')
 
     const article = {
         title,
@@ -68,6 +69,7 @@ router.post('/upsert', new Auth().admin, async (ctx) => {
         markdown,
         publish,
         content,
+        firstImage,
         html: xss(html)
     }
 

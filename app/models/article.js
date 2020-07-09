@@ -128,6 +128,10 @@ Article.init({
     likeNums: {
         type: Sequelize.INTEGER,
         defaultValue: 0
+    },
+    firstImage: {
+        type: Sequelize.STRING,
+        defaultValue: ''
     }
 }, {
     sequelize,
