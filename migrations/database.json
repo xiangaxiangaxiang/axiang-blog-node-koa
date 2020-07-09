@@ -1,7 +1,7 @@
 {
     "development": {
         "username": "root",
-        "password": "xxx,./123",
+        "password": "cpx,./123",
         "database": "axiangblog",
         "host": "127.0.0.1",
         "dialect": "mysql",
