@@ -84,6 +84,24 @@ class UpdateUserValidator extends LinValidator {
         this.id = [
             new Rule('isInt', 'Id是必须参数')
         ]
+        this.nickname = [
+            new Rule('isLength', '昵称不符合长度规范', {
+                min: 2,
+                max: 32
+            }),
+            new Rule('isOptional', '')
+        ]
+    }
+
+    
+}
+
+class UpdatePasswordValidator extends LinValidator {
+    constructor() {
+        super()
+        this.id = [
+            new Rule('isInt', 'Id是必须参数')
+        ]
         this.password1 = [
             new Rule('isLength', '密码至少6个字符，最多32个字符', {
                 min: 6,
@@ -92,13 +110,7 @@ class UpdateUserValidator extends LinValidator {
             new Rule('isOptional', '')
         ]
         this.password2 = this.password1
-        this.nickname = [
-            new Rule('isLength', '昵称不符合长度规范', {
-                min: 2,
-                max: 32
-            }),
-            new Rule('isOptional', '')
-        ]
+        this.oldPassword = this.password1
     }
 
     validatePassword(vals) {
@@ -273,5 +285,6 @@ module.exports = {
     IdValidator,
     PostValidator,
     PaginationsValidator,
-    ArticlePublishValidator
+    ArticlePublishValidator,
+    UpdatePasswordValidator
 }

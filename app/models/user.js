@@ -74,6 +74,28 @@ class User extends Model {
         return user
     }
 
+    static async updatePassword(id, oldPassword, newPassword) {
+        const user = await User.findOne({
+            where: {
+                id
+            }
+        })
+        if (!user) {
+            throw new global.errs.NotFound('账号不存在')
+        }
+        const correct = bcrypt.compareSync(oldPassword, user.password)
+        if (!correct) {
+            throw new global.errs.AuthFailed('密码不正确')
+        }
+        await User.update({
+            password: newPassword
+        }, {
+            where: {
+                id
+            }
+        })
+    }
+
     // 修改用户信息
     static async updateUser(id, nickname, avatar) {
         const user = await User.findOne({
@@ -84,12 +106,6 @@ class User extends Model {
         if (!user) {
             throw new global.errs.NotFound('账号不存在')
         }
-        if (password) {
-            const correct = bcrypt.compareSync(password, user.password)
-            if (!correct) {
-                throw new global.errs.AuthFailed('密码不正确')
-            }
-        }
         const userInfo = {
             nickname: nickname ? nickname : user.nickname,
             avatar: avatar ? avatar : user.avatar
@@ -99,6 +115,11 @@ class User extends Model {
                 id
             }
         })
+        return {
+            id: id,
+            avatar: userInfo.avatar,
+            nickname: userInfo.nickname
+        }
     }
 }
 

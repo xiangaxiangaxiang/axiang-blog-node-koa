@@ -5,7 +5,8 @@ const {
     RegisterValidator,
     LoginValidator,
     NotEmptyValidator,
-    UpdateUserValidator
+    UpdateUserValidator,
+    UpdatePasswordValidator
 } = require('@validator')
 
 const {User} = require('@models/user')
@@ -37,6 +38,16 @@ router.get('/tourist', new Auth().tourist, async (ctx) => {
     throw new global.errs.Success(res)
 })
 
+router.post('/password', async (ctx) => {
+    const v = await new UpdatePasswordValidator().validate(ctx)
+    const id = v.get('body.id')
+    const oldPassword = v.get('body.oldPassword')
+    const newPassword = v.get('body.password2')
+
+    await User.updatePassword(id, oldPassword, newPassword)
+    throw new global.errs.Success()
+})
+
 // 修改用户信息
 router.post('/update', new Auth().user, async (ctx) => {
     const v = await new UpdateUserValidator().validate(ctx)
@@ -48,7 +59,7 @@ router.post('/update', new Auth().user, async (ctx) => {
     let avatarPath
     if (file) {
         // 获取文件后缀
-        const suffix = file.name.split('.').reverse()[0]
+        const suffix = file.name.split('.').pop()
 
         avatarPath = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
         
@@ -60,8 +71,8 @@ router.post('/update', new Auth().user, async (ctx) => {
         upload(filelist)
     }
 
-    await User.updateUser(id, nickname, avatarPath)
-    throw new global.errs.Success()
+    const user = await User.updateUser(id, nickname, avatarPath)
+    throw new global.errs.Success(user)
 
 })
 
