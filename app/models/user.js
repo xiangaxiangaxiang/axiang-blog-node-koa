@@ -75,7 +75,7 @@ class User extends Model {
     }
 
     // 修改用户信息
-    static async updateUser(id, nickname, password) {
+    static async updateUser(id, nickname, avatar) {
         const user = await User.findOne({
             where: {
                 id
@@ -86,10 +86,9 @@ class User extends Model {
         }
         const userInfo = {
             nickname: nickname ? nickname : user.nickname,
-            password: password ? password: user.password,
-            avatar: user.avatar,
+            avatar: avatar ? avatar : user.avatar
         }
-        return await User.update(userInfo, {
+        await User.update(userInfo, {
             where: {
                 id
             }

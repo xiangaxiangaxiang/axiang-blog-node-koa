@@ -43,14 +43,14 @@ router.post('/update', new Auth().user, async (ctx) => {
 
     const id = v.get('body.id')
     const nickname = v.get('body.nickname')
-    const password = v.get('body.password2')
     // 修改用户头像
     const file = v.get('files.file')
+    let avatarPath
     if (file) {
         // 获取文件后缀
         const suffix = file.name.split('.').reverse()[0]
 
-        const avatarPath = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
+        avatarPath = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
         
         // 上传文件到ftp服务器
         let filelist = [{
@@ -60,7 +60,7 @@ router.post('/update', new Auth().user, async (ctx) => {
         upload(filelist)
     }
 
-    const result = await User.updateUser(id, nickname, password)
+    await User.updateUser(id, nickname, avatarPath)
     throw new global.errs.Success()
 
 })
