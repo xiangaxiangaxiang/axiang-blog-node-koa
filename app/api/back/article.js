@@ -1,15 +1,15 @@
 const Router = require('koa-router')
 const xss = require('xss')
 
-const {upload} = require('../../lib/upload')
-const {Auth} = require('@middlewares/auth')
+const { upload } = require('../../lib/upload')
+const { Auth } = require('@middlewares/auth')
 const {
     UpsertArticleValidator,
-    ModifyArticleValidator,
     PaginationsValidator,
     ArticlePublishValidator
 } = require('@validator')
-const {Article} = require('@models/article')
+const { Article } = require('@models/article')
+const { getArticleId } = require('../../lib/util')
 
 const router = new Router({
     prefix: '/back/article'
@@ -59,7 +59,7 @@ router.post('/upsert', new Auth().admin, async (ctx) => {
     const markdown = v.get('body.markdown')
     const content = v.get('body.content')
     const publish = v.get('body.publish')
-    const id = v.get('body.id')
+    const articleId = v.get('body.articleId')
     const firstImage = v.get('body.firstImage')
 
     const article = {
@@ -73,17 +73,21 @@ router.post('/upsert', new Auth().admin, async (ctx) => {
         html: xss(html)
     }
 
-    await Article.upsertArticle(id, article)
+    if (!articleId) {
+        article.articleId = getArticleId(articleType)
+    }
+
+    await Article.upsertArticle(articleId, article)
     throw new global.errs.Success()
 })
 
 router.post('/publish', new Auth().admin, async ctx => {
     const v = await new ArticlePublishValidator().validate(ctx)
 
-    const id = v.get('body.id')
+    const articleId = v.get('body.articleId')
     const publish = v.get('body.publish')
 
-    await Article.changePublish(id, publish)
+    await Article.changePublish(articleId, publish)
     throw new global.errs.Success()
 })
 
@@ -108,12 +112,12 @@ router.post('/publish', new Auth().admin, async ctx => {
 //     throw new global.errs.Success()
 // })
 
-router.post('/delete', new Auth().admin,async (ctx) => {
-    const id = ctx.request.body.id
-    if (!id) {
+router.post('/delete', new Auth().admin, async (ctx) => {
+    const articleId = ctx.request.body.articleId
+    if (!articleId) {
         throw new global.errs.ParameterException()
     }
-    Article.deleteArticle(id)
+    Article.deleteArticle(articleId)
     throw new global.errs.Success()
 })
 

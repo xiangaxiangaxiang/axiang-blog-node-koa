@@ -1,5 +1,5 @@
-const {LinValidator, Rule} = require('../../core/lin-validator')
-const {User} = require('@models/user')
+const { LinValidator, Rule } = require('../../core/lin-validator')
+const { User } = require('@models/user')
 const { PostType, CommentType, ArticleType } = require('../lib/enum')
 
 // 创建用户
@@ -72,7 +72,7 @@ class NotEmptyValidator extends LinValidator {
     constructor() {
         super()
         this.token = [
-            new Rule('isLength', '不允许为空', {min: 1})
+            new Rule('isLength', '不允许为空', { min: 1 })
         ]
     }
 }
@@ -93,7 +93,7 @@ class UpdateUserValidator extends LinValidator {
         ]
     }
 
-    
+
 }
 
 class UpdatePasswordValidator extends LinValidator {
@@ -127,7 +127,7 @@ class AdminRegisterValidator extends RegisterValidator {
     constructor() {
         super()
         this.secret = [
-            new Rule('isLength', '必须输入密令', {min: 1})
+            new Rule('isLength', '必须输入密令', { min: 1 })
         ]
     }
 
@@ -144,26 +144,28 @@ class UpsertArticleValidator extends LinValidator {
     constructor() {
         super()
         this.title = [
-            new Rule('isLength', '标题长度为2-32', {min: 2, max: 32})
+            new Rule('isLength', '标题长度为2-32', { min: 2, max: 32 })
         ]
         this.articleType = [
-             new Rule('isInt', '文章类型为数字', {})
+            new Rule('isInt', '文章类型为数字', {})
         ]
         this.labels = [
-            new Rule('isLength', '至少选择一个标签', {min: 1})
+            new Rule('isLength', '至少选择一个标签', { min: 1 })
         ]
         this.content = [
-            new Rule('isLength', '主要内容不能为空', {min: 1})
+            new Rule('isLength', '主要内容不能为空', { min: 1 })
         ]
         this.html = [
-            new Rule('isLength', 'html不能为空', {min: 1})
+            new Rule('isLength', 'html不能为空', { min: 1 })
         ]
         this.markdown = [
-            new Rule('isLength', 'markdown不能为空', {min: 1})
+            new Rule('isLength', 'markdown不能为空', { min: 1 })
         ]
-        this.id = [
+        this.articleId = [
             new Rule('isOptional', ''),
-            new Rule('isInt', 'ID参数不合法')
+            new Rule('isLength', 'ID参数不合法', {
+                min: 1
+            })
         ]
     }
 
@@ -186,7 +188,7 @@ class UpsertArticleValidator extends LinValidator {
 // }
 
 // 点赞判断
-class LikeValidator extends LinValidator{
+class LikeValidator extends LinValidator {
     constructor() {
         super()
         this.targetId = [
@@ -210,7 +212,7 @@ class CommentValidator extends LinValidator {
             new Rule('isInt', 'targetTitle是必须参数')
         ]
         this.content = [
-            new Rule('isLength', '评论超过最大长度', {min: 1, max: 256})
+            new Rule('isLength', '评论超过最大长度', { min: 1, max: 256 })
         ]
         this.replyUserId = [
             new Rule('isOptional', ''),
@@ -229,11 +231,11 @@ class IdValidator extends LinValidator {
     }
 }
 
-class PostValidator extends LinValidator{
+class PostValidator extends LinValidator {
     constructor() {
         this.content = [
             new Rule('isOptional', ''),
-            new Rule('isLength', '长度不能超过144个字', {max: 144})
+            new Rule('isLength', '长度不能超过144个字', { max: 144 })
         ]
         this.type = [
             new Rule('isInt', 'type参数类型必须为数字')

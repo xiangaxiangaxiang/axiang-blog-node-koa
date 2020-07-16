@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const {Sequelize, Model} = require('sequelize')
+const { Sequelize, Model } = require('sequelize')
 const { sequelize } = require('../../core/db')
 const { UserType } = require('../lib/enum')
 
@@ -18,7 +18,7 @@ class User extends Model {
     }
 
     // 默认id升序排列
-    static async getUserList(offset, limit, sort='id', order='ASC') {
+    static async getUserList(offset, limit, sort = 'id', order = 'ASC') {
         const userList = await User.findAll({
             offset,
             limit,
@@ -52,7 +52,7 @@ class User extends Model {
     }
 
     // 验证管理员账号
-    static async verifyAdmin(account, password) { 
+    static async verifyAdmin(account, password) {
         const user = await User.findOne({
             where: {
                 account
@@ -129,6 +129,7 @@ User.init({
         primaryKey: true,
         autoIncrement: true
     },
+    uid: {},
     nickname: Sequelize.STRING(32),
     avatar: Sequelize.STRING,
     account: {

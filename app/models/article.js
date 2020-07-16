@@ -1,4 +1,4 @@
-const {Sequelize, Model, Op} = require('sequelize')
+const { Sequelize, Model, Op } = require('sequelize')
 const { sequelize } = require('../../core/db')
 
 class Article extends Model {
@@ -20,9 +20,9 @@ class Article extends Model {
                 [Op.like]: `%${searchText}%`
             }
         }
-        
-        const total = await Article.count(searchText || label ? {where: filter} : {})
-        const articles = await Article.findAll(Object.assign({}, query, searchText || label ? {where: filter} : {}))
+
+        const total = await Article.count(searchText || label ? { where: filter } : {})
+        const articles = await Article.findAll(Object.assign({}, query, searchText || label ? { where: filter } : {}))
 
         return {
             total,
@@ -31,10 +31,10 @@ class Article extends Model {
     }
 
     // 删除文章
-    static async deleteArticle(id) {
+    static async deleteArticle(articleId) {
         const article = await Article.findOne({
             where: {
-                id
+                articleId
             }
         })
         if (!article) {
@@ -44,10 +44,10 @@ class Article extends Model {
     }
 
     // 修改文章
-    static async updateArticle(id, newArticle) {
+    static async updateArticle(articleId, newArticle) {
         const article = await Article.findOne({
             where: {
-                id
+                articleId
             }
         })
         if (!article) {
@@ -57,22 +57,22 @@ class Article extends Model {
     }
 
     // 修改发布状态
-    static async changePublish(id, publish) {
+    static async changePublish(articleId, publish) {
         const article = await Article.findOne({
             where: {
-                id
+                articleId
             }
         })
         if (!article) {
             throw new global.errs.NotFound('文章不存在')
         }
-        await article.update({publish})
+        await article.update({ publish })
     }
 
-    static async upsertArticle(id, articleObj) {
-        if (id) {
+    static async upsertArticle(articleId, articleObj) {
+        if (articleId) {
             const article = await Article.findOne({
-                where: { id }
+                where: { articleId }
             })
             if (!article) {
                 throw new global.errs.NotFound('文章不存在')
@@ -97,6 +97,10 @@ Article.init({
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
+    },
+    articleId: {
+        type: Sequelize.STRING,
+        unique: true
     },
     title: {
         type: Sequelize.STRING,
