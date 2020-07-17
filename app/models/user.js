@@ -129,7 +129,10 @@ User.init({
         primaryKey: true,
         autoIncrement: true
     },
-    uid: {},
+    uid: {
+        type: Sequelize.INTEGER,
+        unique: true
+    },
     nickname: Sequelize.STRING(32),
     avatar: Sequelize.STRING,
     account: {
