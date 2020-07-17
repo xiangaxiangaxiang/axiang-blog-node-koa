@@ -6,6 +6,11 @@ function getArticleId(type) {
     return articleMap.get(type) + Date.now().toString(16)
 }
 
+function generateUid() {
+    let time = Date.now().substring(1,11) * 3
+    return time.toString(16)
+}
+
 module.exports = {
     getArticleId
 }

@@ -14,6 +14,7 @@ const { Statistics } = require('@models/statistics')
 const {UserType} = require('../../lib/enum')
 const {upload} = require('../../lib/upload')
 const {generateToken} = require('@core/util')
+const {generateUid} = require('../../lib/util')
 const {Auth} = require('@middlewares/auth')
 
 const router = new Router({
@@ -32,7 +33,7 @@ router.get('/tourist', new Auth().tourist, async (ctx) => {
     let res = {}
     if (ctx.tourist && (ctx.tourist.newTourist || ctx.tourist.expires)) {
         const user = await User.createUser(newUser)
-        const token = generateTouristToken(user.id, UserType.TOURIST)
+        const token = generateTouristToken(user.uid, UserType.TOURIST)
         res = {token}
     }
     throw new global.errs.Success(res)
@@ -40,11 +41,11 @@ router.get('/tourist', new Auth().tourist, async (ctx) => {
 
 router.post('/password', async (ctx) => {
     const v = await new UpdatePasswordValidator().validate(ctx)
-    const id = v.get('body.id')
+    const uid = v.get('body.uid')
     const oldPassword = v.get('body.oldPassword')
     const newPassword = v.get('body.password2')
 
-    await User.updatePassword(id, oldPassword, newPassword)
+    await User.updatePassword(uid, oldPassword, newPassword)
     throw new global.errs.Success()
 })
 
@@ -52,7 +53,7 @@ router.post('/password', async (ctx) => {
 router.post('/update', new Auth().user, async (ctx) => {
     const v = await new UpdateUserValidator().validate(ctx)
 
-    const id = v.get('body.id')
+    const uid = v.get('body.uid')
     const nickname = v.get('body.nickname')
     // 修改用户头像
     const file = v.get('files.file')
@@ -71,7 +72,7 @@ router.post('/update', new Auth().user, async (ctx) => {
         upload(filelist)
     }
 
-    const user = await User.updateUser(id, nickname, avatarPath)
+    const user = await User.updateUser(uid, nickname, avatarPath)
     throw new global.errs.Success(user)
 
 })
@@ -84,11 +85,11 @@ router.post('/login', async (ctx) => {
     // 验证密码,用户状态
     const user = await User.verifyAccount(account, password)
     // 生成token
-    const token = generateToken(user.id, user.userType)
+    const token = generateToken(user.uid, user.userType)
     user.setDataValue('token', token)
     ctx.body = {
         token,
-        id: user.id,
+        uid: user.uid,
         nickname: user.nickname,
         avatar: user.avatar
     }
@@ -132,7 +133,8 @@ router.post('/register', async (ctx) => {
         password: v.get('body.password2'),
         nickname: v.get('body.nickname'),
         userType: UserType.USER,
-        avatar: avatarPath
+        avatar: avatarPath,
+        uid: generateUid()
     }
     const result = await User.createUser(user)
     throw new global.errs.Success()

@@ -74,10 +74,10 @@ class User extends Model {
         return user
     }
 
-    static async updatePassword(id, oldPassword, newPassword) {
+    static async updatePassword(uid, oldPassword, newPassword) {
         const user = await User.findOne({
             where: {
-                id
+                uid
             }
         })
         if (!user) {
@@ -91,16 +91,16 @@ class User extends Model {
             password: newPassword
         }, {
             where: {
-                id
+                uid
             }
         })
     }
 
     // 修改用户信息
-    static async updateUser(id, nickname, avatar) {
+    static async updateUser(uid, nickname, avatar) {
         const user = await User.findOne({
             where: {
-                id
+                uid
             }
         })
         if (!user) {
@@ -112,11 +112,11 @@ class User extends Model {
         }
         await User.update(userInfo, {
             where: {
-                id
+                uid
             }
         })
         return {
-            id: id,
+            uid: uid,
             avatar: userInfo.avatar,
             nickname: userInfo.nickname
         }
