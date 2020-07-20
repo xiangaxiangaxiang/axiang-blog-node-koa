@@ -30,13 +30,13 @@ router.get('/tourist', new Auth().tourist, async (ctx) => {
         userType: UserType.TOURIST,
         avatar: `/img/avatar/default_${ Math.floor(Math.random() * 5) + 1 }.jpg`
     }
-    let res = {}
     if (ctx.tourist && (ctx.tourist.newTourist || ctx.tourist.expires)) {
         const user = await User.createUser(newUser)
         const token = generateTouristToken(user.uid, UserType.TOURIST)
-        res = {token}
+        ctx.cookies.set('auth', token, {
+            maxAge: 3 * 60 * 1000
+        })
     }
-    throw new global.errs.Success(res)
 })
 
 router.post('/password', async (ctx) => {
@@ -86,9 +86,10 @@ router.post('/login', async (ctx) => {
     const user = await User.verifyAccount(account, password)
     // 生成token
     const token = generateToken(user.uid, user.userType)
-    user.setDataValue('token', token)
+    ctx.cookies.set('auth', token, {
+        maxAge: 24 * 60 * 1000
+    })
     ctx.body = {
-        token,
         uid: user.uid,
         nickname: user.nickname,
         avatar: user.avatar
@@ -136,7 +137,7 @@ router.post('/register', async (ctx) => {
         avatar: avatarPath,
         uid: generateUid()
     }
-    const result = await User.createUser(user)
+    await User.createUser(user)
     throw new global.errs.Success()
 })
 

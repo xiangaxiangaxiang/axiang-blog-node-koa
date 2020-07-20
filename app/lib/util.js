@@ -7,10 +7,11 @@ function getArticleId(type) {
 }
 
 function generateUid() {
-    let time = Date.now().substring(1,11) * 3
+    let time = Date.now().toString().substring(1,11) * 3
     return time.toString(16)
 }
 
 module.exports = {
-    getArticleId
+    getArticleId,
+    generateUid
 }

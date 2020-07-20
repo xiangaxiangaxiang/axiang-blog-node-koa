@@ -11,6 +11,7 @@ const {Auth} = require('@middlewares/auth')
 const {upload} = require('../../lib/upload')
 const {generateToken} = require('@core/util')
 const { UserType } = require('../../lib/enum')
+const { generateUid } = require('../../lib/util')
 
 const router = new Router({
     prefix: '/back/user'
@@ -26,11 +27,13 @@ router.post('/admin_login', async (ctx) => {
     // 生成token
     const token = generateToken(user.id, user.userType)
     const res = {
-        token,
-        id: user.id,
+        uid: user.uid,
         nickname: user.nickname,
         avatar: user.avatar
     }
+    ctx.cookies.set('auth', token, {
+        maxAge: 24 * 60 * 1000
+    })
     throw new global.errs.Success(res)
 })
 
@@ -63,9 +66,10 @@ router.post('/admin_register', async (ctx) => {
         password: v.get('body.password2'),
         nickname: v.get('body.nickname'),
         userType: UserType.ADMIN,
-        avatar: avatarPath
+        avatar: avatarPath,
+        uid: generateUid()
     }
-    const result = await User.createUser(user)
+    await User.createUser(user)
     throw new global.errs.Success()
 })
 
