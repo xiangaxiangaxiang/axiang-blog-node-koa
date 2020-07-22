@@ -130,7 +130,7 @@ User.init({
         autoIncrement: true
     },
     uid: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         unique: true
     },
     nickname: Sequelize.STRING(32),

@@ -89,11 +89,12 @@ router.post('/login', async (ctx) => {
     ctx.cookies.set('auth', token, {
         maxAge: 24 * 60 * 1000
     })
-    ctx.body = {
+    const res = {
         uid: user.uid,
         nickname: user.nickname,
         avatar: user.avatar
     }
+    throw new global.errs.Success(res)
 })
 
 // 测试验证token
