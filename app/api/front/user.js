@@ -92,7 +92,8 @@ router.post('/login', async (ctx) => {
     const res = {
         uid: user.uid,
         nickname: user.nickname,
-        avatar: user.avatar
+        avatar: user.avatar,
+        token
     }
     throw new global.errs.Success(res)
 })

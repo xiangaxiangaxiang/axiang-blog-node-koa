@@ -1,4 +1,4 @@
-const basicAuth = require('basic-auth')
+// const basicAuth = require('basic-auth')
 const jwt = require('jsonwebtoken')
 
 class Auth {
@@ -10,12 +10,12 @@ class Auth {
     // 验证token
     _verifyToken(userToken) {
         let errMsg = 'token不合法'
-        if (!userToken || !userToken.name) {
+        if (!userToken) {
             throw new global.errs.Forbbiden(errMsg)
         }
         try {
             // 解码token
-            var decode = jwt.verify(userToken.name, global.config.security.secretKey)
+            var decode = jwt.verify(userToken, global.config.security.secretKey)
         } catch (error) {
             if (error.name == 'TokenExpireError') {
                 errMsg = 'token已过期'
@@ -28,7 +28,9 @@ class Auth {
     get admin() {
         return async (ctx, next) => {
 
-            const userToken = basicAuth(ctx.req)
+
+            // const userToken = basicAuth(ctx.req)
+            const userToken = ctx.cookies.get('auth')
             let decode = this._verifyToken(userToken)
 
             if (decode.userType < Auth.ADMIN) {
@@ -48,7 +50,8 @@ class Auth {
     get user() {
         return async (ctx, next) => {
 
-            const userToken = basicAuth(ctx.req)
+            // const userToken = basicAuth(ctx.req)
+            const userToken = ctx.cookies.get('auth')
             
             let decode = this._verifyToken(userToken)
 

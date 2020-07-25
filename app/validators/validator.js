@@ -81,8 +81,8 @@ class NotEmptyValidator extends LinValidator {
 class UpdateUserValidator extends LinValidator {
     constructor() {
         super()
-        this.id = [
-            new Rule('isInt', 'Id是必须参数')
+        this.uid = [
+            new Rule('isLength', 'UID是必须参数', { min: 1})
         ]
         this.nickname = [
             new Rule('isLength', '昵称不符合长度规范', {
@@ -99,7 +99,7 @@ class UpdateUserValidator extends LinValidator {
 class UpdatePasswordValidator extends LinValidator {
     constructor() {
         super()
-        this.id = [
+        this.uid = [
             new Rule('isInt', 'Id是必须参数')
         ]
         this.password1 = [
