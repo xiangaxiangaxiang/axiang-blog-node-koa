@@ -1,6 +1,6 @@
 const { LinValidator, Rule } = require('../../core/lin-validator')
 const { User } = require('@models/user')
-const { PostType, CommentType, ArticleType } = require('../lib/enum')
+const { PostType, CommentType, ArticleType, OperationType } = require('../lib/enum')
 
 // 创建用户
 class RegisterValidator extends LinValidator {
@@ -197,6 +197,17 @@ class LikeValidator extends LinValidator {
         this.type = [
             new Rule('isInt', '类型不能为空')
         ]
+        this.replyUserId = [
+            new Rule('isOptional', ''),
+            new Rule('isLength', '类型不能为空', { min: 1 })
+        ]
+    }
+
+    validateType(vals) {
+        const type = vals.body.type
+        if (!OperationType.isThisType(type)) {
+            throw new Error('类型错误')
+        }
     }
 }
 
@@ -208,8 +219,8 @@ class CommentValidator extends LinValidator {
         this.targetId = [
             new Rule('isInt', 'targetId是必须参数')
         ]
-        this.targetTitle = [
-            new Rule('isInt', 'targetTitle是必须参数')
+        this.type = [
+            new Rule('isInt', 'type是必须参数')
         ]
         this.content = [
             new Rule('isLength', '评论超过最大长度', { min: 1, max: 256 })
@@ -218,6 +229,13 @@ class CommentValidator extends LinValidator {
             new Rule('isOptional', ''),
             new Rule('isInt', '回复用户Id格式不正确')
         ]
+    }
+
+    validateType(vals) {
+        const type = vals.body.type
+        if (!OperationType.isThisType(type)) {
+            throw new Error('类型错误')
+        }
     }
 }
 

@@ -35,13 +35,11 @@ class Notification extends Model {
     }
 
     static async addNotification(targetId, targetType, type, operationUserId, userId) {
-        const operationUserInfo = Notification.getUserInfo(operationUserId)
         const notification = {
             targetId,
             targetType,
             type,
             operationUserId,
-            operationUserInfo,
             userId
         }
         Notification.create(notification)
@@ -103,7 +101,7 @@ Notification.init({
     targetType: Sequelize.INTEGER,
     // 评论还是点赞
     type: Sequelize.INTEGER,
-    operationUserId: Sequelize.INTEGER,
+    operationUserId: Sequelize.STRING,
     userId: Sequelize.INTEGER,
     unread: {
         type: Sequelize.INTEGER,

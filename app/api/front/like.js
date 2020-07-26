@@ -8,13 +8,16 @@ const router = new Router({
     prefix: '/front/like'
 })
 
-router.post('/', new Auth().user, async (ctx) => {
+router.post('/', async (ctx) => {
     const v = await new LikeValidator().validate(ctx)
     const targetId = v.get('body.targetId')
     const type = v.get('body.type')
-    const uid = ctx.auth.uid
+    const replyUserId = v.get('body.replyUserId')
+    // const uid = ctx.auth.uid
+    
+    const uid = '4294b3237'
 
-    await Like.like(targetId, type, uid)
+    await Like.like(targetId, type, uid, replyUserId)
     throw new global.errs.Success() 
 })
 

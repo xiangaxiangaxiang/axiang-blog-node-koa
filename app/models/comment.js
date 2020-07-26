@@ -4,11 +4,11 @@ const { sequelize } = require('../../core/db')
 const {User} = require('@models/user')
 const {randomStr} = require('../lib/random')
 const {Notification} = require('./notification')
-const {NotificationType, UserType} = require('../lib/enum')
+const {NotificationType, UserType, OperationType} = require('../lib/enum')
 
 class Comment extends Model {
-    static async addComment(targetId, content, uid, commentId, replyUserId, targetTitle) {
-        const userInfo = await Comment.getUserInfo(uid)
+    static async addComment(targetId, content, uid, commentId, replyUserId, type) {
+        // const userInfo = await Comment.getUserInfo(uid)
         let replyUserInfo = {}
         if (replyUserId) {
             // 判断评论是否存在
@@ -16,16 +16,15 @@ class Comment extends Model {
             if (!comment) {
                 throw new global.errs.NotFound('评论不存在')
             }
-            // 获取被回复人的信息
-            replyUserInfo = await Comment.getUserInfo(replyUserId)
         }
         const comment = {
             commentId: commentId ? commentId : randomStr(),
             targetId,
             content,
-            targetTitle,
-            userInfo: JSON.stringify(userInfo),
-            replyUserInfo: JSON.stringify(replyUserInfo)
+            userId: uid
+        }
+        if (replyUserId) {
+            comment.replyUserId = replyUserId
         }
         await Notification.addNotification(targetId, type, NotificationType.COMMENT, uid, replyUserId)
         await Comment.create(comment)
@@ -34,7 +33,7 @@ class Comment extends Model {
     static async getUserInfo(uid) {
         const user = await User.findOne({
             where: {
-                id: uid
+                uid: uid
             }
         })
         if(!user) {
@@ -136,8 +135,11 @@ Comment.init({
     },
     targetId: Sequelize.INTEGER,
     content: Sequelize.STRING,
-    userId: Sequelize.INTEGER,
-    replyUserId: Sequelize.INTEGER,
+    userId: Sequelize.STRING,
+    replyUserId: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
     isDeleted: {
         type: Sequelize.INTEGER,
         defaultValue: 0

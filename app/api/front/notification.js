@@ -7,7 +7,7 @@ const router = new Router({
     prefix: '/front/notification'
 })
 
-router.get('/notification', new Auth().user, async (ctx) => {
+router.get('/', new Auth().user, async (ctx) => {
     const uid = ctx.auth.uid
     const notifications = await Notification.getNotification(uid)
     ctx.body = notifications

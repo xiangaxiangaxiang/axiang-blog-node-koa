@@ -12,13 +12,13 @@ router.post('/add', new Auth().user, async (ctx) => {
     const v = await new CommentValidator().validate(ctx)
     const targetId = v.get('body.targetId')
     const content = v.get('body.content')
-    const targetTitle = v.get('body.targetTitle')
+    const type = v.get('body.type')
     const uid = ctx.auth.uid
     // 如果是回复别人
     const commentId = v.get('body.commentId')
     const replyUserId = v.get('body.replyUserId')
 
-    await Comment.addComment(targetId, content, uid, commentId, replyUserId, targetTitle)
+    await Comment.addComment(targetId, content, uid, commentId, replyUserId)
     throw new global.errs.Success() 
 })
 
