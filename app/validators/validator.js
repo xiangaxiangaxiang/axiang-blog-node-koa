@@ -267,7 +267,6 @@ class PostValidator extends LinValidator {
     }
 }
 
-// 文章发布状态校验
 class PaginationsValidator extends LinValidator {
     constructor() {
         super()
@@ -276,6 +275,10 @@ class PaginationsValidator extends LinValidator {
         ]
         this.limit = [
             new Rule('isInt', '参数不能为空')
+        ]
+        this.type = [
+            new Rule('isOptional', ''),
+            new Rule('isInt', '参数为INT')
         ]
     }
 }

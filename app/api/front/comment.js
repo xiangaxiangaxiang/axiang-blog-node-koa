@@ -18,7 +18,7 @@ router.post('/add', new Auth().user, async (ctx) => {
     const commentId = v.get('body.commentId')
     const replyUserId = v.get('body.replyUserId')
 
-    await Comment.addComment(targetId, content, uid, commentId, replyUserId)
+    await Comment.addComment(targetId, content, uid, commentId, replyUserId, type)
     throw new global.errs.Success() 
 })
 

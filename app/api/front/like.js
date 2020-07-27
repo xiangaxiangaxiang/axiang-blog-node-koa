@@ -17,7 +17,7 @@ router.post('/', async (ctx) => {
     
     const uid = '4294b3237'
 
-    await Like.like(targetId, type, uid, replyUserId)
+    await Like.like(targetId, type, uid, replyUserId, type)
     throw new global.errs.Success() 
 })
 
