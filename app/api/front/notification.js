@@ -20,6 +20,13 @@ router.get('/', new Auth().user, async (ctx) => {
     throw new global.errs.Success(notifications)
 })
 
+router.get('/unread_nums', new Auth().user, async ctx => {
+    const uid = ctx.auth.uid
+
+    const res = await Notification.getUnreadNums(uid)
+    throw new global.errs.Success(res)
+})
+
 router.post('/read', new Auth().user, async (ctx) => {
     const uid = ctx.auth.uid
     const type = ctx.request.body.type

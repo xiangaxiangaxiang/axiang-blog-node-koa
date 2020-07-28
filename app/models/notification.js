@@ -22,6 +22,18 @@ class Notification extends Model {
         }
     }
 
+    static async getUnreadNums(uid) {
+        const nums = await Notification.count({
+            where: {
+                userId: uid,
+                unread: 1
+            }
+        })
+        return {
+            nums
+        }
+    }
+
     static async cancellationNotice(targetId, targetType, operationUserId, userId) {
         const notification = await Notification.findOne({
             targetId,
