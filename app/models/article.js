@@ -1,7 +1,27 @@
 const { Sequelize, Model, Op } = require('sequelize')
 const { sequelize } = require('../../core/db')
+const {unset} = require('lodash')
 
 class Article extends Model {
+
+    static async getArticleDetail(articleId) {
+        const article = await Article.findOne({
+            where: {
+                articleId
+            }
+        })
+        if (!article) {
+            throw new global.errs.NotFound('文章不存在')
+        }
+        article.increment('clickNums', {
+            by: 1
+        })
+        unset(article, 'id')
+        unset(article, 'publish')
+        unset(article, 'content')
+
+        return article
+    }
 
     static async getArticles(offset, limit, searchText, label) {
         let query = {
@@ -130,6 +150,10 @@ Article.init({
     },
     publish: Sequelize.INTEGER,
     likeNums: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    },
+    clickNums: {
         type: Sequelize.INTEGER,
         defaultValue: 0
     },
