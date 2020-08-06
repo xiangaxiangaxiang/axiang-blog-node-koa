@@ -20,8 +20,9 @@ const router = new Router({
 // 管理员登陆
 router.post('/admin_login', async (ctx) => {
     const v = await new LoginValidator().validate(ctx)
-    const account = v.get('body.account')
-    const password = v.get('body.password')
+
+    const { account, password } = v.get('body')
+
     // 验证密码,用户状态
     const user = await User.verifyAdmin(account, password)
     // 生成token
@@ -77,10 +78,11 @@ router.post('/admin_register', async (ctx) => {
 
 router.get('/', new Auth().admin, async (ctx) => {
     const v = await new PaginationsValidator().validate(ctx)
-    const offset = v.get('query.offset')
-    const limit = v.get('query.limit')
-    const sort = v.get('query.sort')
-    const order = v.get('query.order')
+
+    const {
+        offset, limit, sort, order
+    } = v.get('query')
+    
     let data
     if (sort && order) {
         data = await User.getUserList(offset, limit, sort, order)

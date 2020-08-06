@@ -11,9 +11,9 @@ const router = new Router({
 
 router.post('/add', new Auth().admin, async (ctx) => {
     const v = await new PostValidator().validate(ctx)
+
+    const { content, type } = v.get('body')
     const files = v.get('files')
-    const content = v.get('body.content')
-    const type = v.get('body.type')
 
     let urls = []
     let saveList = []
@@ -35,7 +35,9 @@ router.post('/add', new Auth().admin, async (ctx) => {
 
 router.post('/delete', new Auth().admin, async (ctx) => {
     const v = await new IdValidator().validate(ctx)
+
     const id = v.get('body.id')
+    
     await Post.deletePost(id)
     throw new global.errs.Success()
 })

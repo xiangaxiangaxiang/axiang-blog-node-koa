@@ -15,9 +15,11 @@ const router = new Router({
 router.get('/', new Auth().admin, async ctx => {
     const v = await new PaginationsValidator().validate(ctx)
 
-    const offset = v.get('query.offset')
-    const limit = v.get('query.limit')
-    const searchText = v.get('query.searchText')
+    const {
+        offset,
+        limit,
+        searchText
+    } = v.get('query')
 
     const res = await Comment.getCommentList(offset, limit, searchText)
 
@@ -26,12 +28,11 @@ router.get('/', new Auth().admin, async ctx => {
 
 router.post('/delete', new Auth().admin, async (ctx) => {
     const v = await new IdValidator().validate(ctx)
+
     const id = v.get('body.id')
-    if (!id) {
-        throw new global.errs.ParameterException()
-    }
     const uid = ctx.auth.uid
     const userType = ctx.auth.userType
+    
     await Comment.deleteComment(id, uid, userType)
     throw new global.errs.Success()
 })

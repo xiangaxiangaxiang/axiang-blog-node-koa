@@ -18,10 +18,12 @@ const router = new Router({
 router.get('/', new Auth().admin, async ctx => {
     const v = await new PaginationsValidator().validate(ctx)
 
-    const offset = v.get('query.offset')
-    const limit = v.get('query.limit')
-    const searchText = v.get('query.searchText')
-    const label = v.get('query.label')
+    const {
+        offset,
+        limit,
+        searchText,
+        label
+    } = v.get('query')
 
     const res = await Article.getArticles(offset, limit, searchText, label)
 
@@ -51,16 +53,17 @@ router.post('/image_upload', new Auth().admin, async (ctx) => {
 router.post('/upsert', new Auth().admin, async (ctx) => {
     const v = await new UpsertArticleValidator().validate(ctx)
 
-    // 获取参数
-    const title = v.get('body.title')
-    const labels = v.get('body.labels')
-    const articleType = v.get('body.articleType')
-    const html = v.get('body.html')
-    const markdown = v.get('body.markdown')
-    const content = v.get('body.content')
-    const publish = v.get('body.publish')
-    const articleId = v.get('body.articleId')
-    const firstImage = v.get('body.firstImage')
+    const {
+        title,
+        labels,
+        articleType,
+        html,
+        markdown,
+        content,
+        publish,
+        articleId,
+        firstImage
+    } = v.get('body')
 
     const article = {
         title,
@@ -84,8 +87,7 @@ router.post('/upsert', new Auth().admin, async (ctx) => {
 router.post('/publish', new Auth().admin, async ctx => {
     const v = await new ArticlePublishValidator().validate(ctx)
 
-    const articleId = v.get('body.articleId')
-    const publish = v.get('body.publish')
+    const { articleId, publish } = v.get('body')
 
     await Article.changePublish(articleId, publish)
     throw new global.errs.Success()
