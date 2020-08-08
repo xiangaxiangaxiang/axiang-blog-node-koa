@@ -1,7 +1,8 @@
 const {Sequelize, Model, Op} = require('sequelize')
 
 const { sequelize } = require('../../core/db')
-const {User} = require('@models/user')
+const {User} = require('./user')
+const {Article} = require('./article')
 const {randomStr} = require('../lib/random')
 const {Notification} = require('./notification')
 const {NotificationType, UserType, OperationType} = require('../lib/enum')
@@ -26,8 +27,19 @@ class Comment extends Model {
         if (replyUserId) {
             comment.replyUserId = replyUserId
         }
-        await Notification.addNotification(targetId, type, NotificationType.COMMENT, uid, replyUserId)
-        await Comment.create(comment)
+        return sequelize.transaction(async t => {
+            await Comment.create(comment, {transaction: t})
+            await Notification.addNotification(targetId, type, NotificationType.COMMENT, uid, replyUserId)
+            const article = await Article.findOne({
+                where: {
+                    articleId: targetId
+                }
+            })
+            await article.increment('commentsNums', {
+                by: 1,
+                transaction: t
+            })
+        })
     }
 
     static async getUserInfo(uid) {

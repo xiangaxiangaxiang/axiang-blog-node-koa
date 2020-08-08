@@ -10,12 +10,9 @@ const router = new Router({
 
 router.post('/', async (ctx) => {
     const v = await new LikeValidator().validate(ctx)
-    const targetId = v.get('body.targetId')
-    const type = v.get('body.type')
-    const replyUserId = v.get('body.replyUserId')
-    // const uid = ctx.auth.uid
-    
-    const uid = '4294b3237'
+
+    const { targetId, type, replyUserId } = v.get('body')
+    const uid = ctx.auth.uid
 
     await Like.like(targetId, type, uid, replyUserId, type)
     throw new global.errs.Success() 
@@ -23,8 +20,8 @@ router.post('/', async (ctx) => {
 
 router.post('/dislike', new Auth().user, async (ctx) => {
     const v = await new LikeValidator().validate(ctx)
-    const targetId = v.get('body.targetId')
-    const type = v.get('body.type')
+
+    const { targetId, type } = v.get('body')
     const uid = ctx.auth.uid
 
     await Like.dislike(targetId, type, uid)

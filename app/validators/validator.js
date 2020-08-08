@@ -283,7 +283,6 @@ class PaginationsValidator extends LinValidator {
     }
 }
 
-// 分页校验
 class ArticlePublishValidator extends LinValidator {
     constructor() {
         super()
@@ -293,6 +292,42 @@ class ArticlePublishValidator extends LinValidator {
         this.publish = [
             new Rule('isInt', '参数不能为空')
         ]
+    }
+}
+
+class ArticleListValidator extends PaginationsValidator {
+    constructor() {
+        super()
+        this.articleType = [
+            new Rule('isInt', '参数不能为空')
+        ]
+        this.label = [
+            new Rule('isOptional', '')
+        ]
+        this.searchText = [
+            new Rule('isOptional', ''),
+            new Rule('isLength', '参数长度为1到16', {
+                min: 1,
+                max: 16
+            })
+        ]
+    }
+
+    validateLabel(vals) {
+        const label = vals.query.label
+        if (label) {
+            const labelArr = JSON.parse(label)
+            if (!Array.isArray(labelArr)) {
+                throw new global.errs.ParameterException('标签类型错误')
+            }
+        }
+    }
+
+    validateArticleType(vals) {
+        const articleType = vals.query.articleType
+        if (!ArticleType.isThisType(articleType)) {
+            throw new global.errs.ParameterException('文章类型错误')
+        }
     }
 }
 
@@ -309,5 +344,6 @@ module.exports = {
     PostValidator,
     PaginationsValidator,
     ArticlePublishValidator,
-    UpdatePasswordValidator
+    UpdatePasswordValidator,
+    ArticleListValidator
 }

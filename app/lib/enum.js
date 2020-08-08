@@ -39,7 +39,7 @@ const NotificationType = {
 
 const ArticleType = {
     isThisType,
-    TECHNICAL: 100,
+    TECHNOLOGY: 100,
     LIFE: 200,
     DREAM: 300
 }

@@ -12,9 +12,7 @@ router.get('/', new Auth().user, async (ctx) => {
     const v = await new PaginationsValidator().validate(ctx)
 
     const uid = ctx.auth.uid
-    const offset = v.get('query.offset')
-    const limit = v.get('query.limit')
-    const type = v.get('query.type')
+    const { offset, limit, type } = v.get('query')
 
     const notifications = await Notification.getNotification(uid, type, limit, offset)
     throw new global.errs.Success(notifications)

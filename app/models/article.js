@@ -23,7 +23,7 @@ class Article extends Model {
         return article
     }
 
-    static async getArticles(offset, limit, searchText, label) {
+    static async getArticles(offset, limit, searchText, label, articleType=null) {
         let query = {
             offset,
             limit,
@@ -40,9 +40,12 @@ class Article extends Model {
                 [Op.like]: `%${searchText}%`
             }
         }
+        if (articleType) {
+            filter.articleType = articleType
+        }
 
-        const total = await Article.count(searchText || label ? { where: filter } : {})
-        const articles = await Article.findAll(Object.assign({}, query, searchText || label ? { where: filter } : {}))
+        const total = await Article.count({ where: filter })
+        const articles = await Article.findAll(Object.assign({}, query, { where: filter }))
 
         return {
             total,
@@ -154,6 +157,10 @@ Article.init({
         defaultValue: 0
     },
     clickNums: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    },
+    commentsNums: {
         type: Sequelize.INTEGER,
         defaultValue: 0
     },

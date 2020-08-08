@@ -41,9 +41,8 @@ router.get('/tourist', new Auth().tourist, async (ctx) => {
 
 router.post('/password', async (ctx) => {
     const v = await new UpdatePasswordValidator().validate(ctx)
-    const uid = v.get('body.uid')
-    const oldPassword = v.get('body.oldPassword')
-    const newPassword = v.get('body.password2')
+
+    const { uid, oldPassword, newPassword } = v.get('body')
 
     await User.updatePassword(uid, oldPassword, newPassword)
     throw new global.errs.Success()
@@ -53,8 +52,7 @@ router.post('/password', async (ctx) => {
 router.post('/update', new Auth().user, async (ctx) => {
     const v = await new UpdateUserValidator().validate(ctx)
 
-    const uid = v.get('body.uid')
-    const nickname = v.get('body.nickname')
+    const { uid, nickname } = v.get('body')
     // 修改用户头像
     const file = v.get('files.file')
     let avatarPath
@@ -80,8 +78,8 @@ router.post('/update', new Auth().user, async (ctx) => {
 // 登录
 router.post('/login', async (ctx) => {
     const v = await new LoginValidator().validate(ctx)
-    const account = v.get('body.account')
-    const password = v.get('body.password')
+
+    const { account, password } = v.get('body')
     // 验证密码,用户状态
     const user = await User.verifyAccount(account, password)
     // 生成token

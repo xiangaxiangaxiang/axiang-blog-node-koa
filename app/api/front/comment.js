@@ -10,13 +10,11 @@ const router = new Router({
 
 router.post('/add', new Auth().user, async (ctx) => {
     const v = await new CommentValidator().validate(ctx)
-    const targetId = v.get('body.targetId')
-    const content = v.get('body.content')
-    const type = v.get('body.type')
+
+    const { targetId, content, type } = v.get('body')
     const uid = ctx.auth.uid
     // 如果是回复别人
-    const commentId = v.get('body.commentId')
-    const replyUserId = v.get('body.replyUserId')
+    const { commentId, replyUserId } = v.get('body')
 
     await Comment.addComment(targetId, content, uid, commentId, replyUserId, type)
     throw new global.errs.Success() 
@@ -24,13 +22,10 @@ router.post('/add', new Auth().user, async (ctx) => {
 
 router.post('/delete', new Auth().user, async (ctx) => {
     const v = await new IdValidator().validate(ctx)
+
     const id = v.get('body.id')
     const uid = ctx.auth.uid
     const userType = ctx.auth.userType
-    
-    if (!id) {
-        throw new global.errs.ParameterException()
-    }
 
     await Comment.deleteComment(id, uid, userType)
     throw new global.errs.Success() 
@@ -42,7 +37,8 @@ router.get('/getComment', async (ctx) => {
         throw new global.errs.ParameterException()
     }
     const data = await new Comment().getComment(targetId)
-    ctx.body = data
+    
+    throw new global.errs.Success(data) 
 })
 
 module.exports = router
