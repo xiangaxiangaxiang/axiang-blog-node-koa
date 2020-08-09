@@ -313,21 +313,20 @@ class ArticleListValidator extends PaginationsValidator {
         ]
     }
 
-    validateLabel(vals) {
-        const label = vals.query.label
-        if (label) {
-            const labelArr = JSON.parse(label)
-            if (!Array.isArray(labelArr)) {
-                throw new global.errs.ParameterException('标签类型错误')
-            }
-        }
-    }
-
     validateArticleType(vals) {
         const articleType = vals.query.articleType
         if (!ArticleType.isThisType(articleType)) {
             throw new global.errs.ParameterException('文章类型错误')
         }
+    }
+}
+
+class TypeVailidator extends LinValidator {
+    constructor() {
+        super()
+        this.type = [
+            new Rule('isInt', 'type参数错误')
+        ]
     }
 }
 
@@ -345,5 +344,6 @@ module.exports = {
     PaginationsValidator,
     ArticlePublishValidator,
     UpdatePasswordValidator,
-    ArticleListValidator
+    ArticleListValidator,
+    TypeVailidator
 }

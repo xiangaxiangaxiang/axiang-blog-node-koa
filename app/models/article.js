@@ -1,5 +1,6 @@
 const { Sequelize, Model, Op } = require('sequelize')
 const { sequelize } = require('../../core/db')
+const { Label } = require('./label')
 const {unset} = require('lodash')
 
 class Article extends Model {
@@ -37,7 +38,7 @@ class Article extends Model {
         }
         if (label) {
             filter.labels = {
-                [Op.like]: `%${searchText}%`
+                [Op.like]: `%${label}%`
             }
         }
         if (articleType) {
@@ -112,6 +113,27 @@ class Article extends Model {
             }
             await Article.create(articleObj)
         }
+        let labels = articleObj.labels
+        if (labels) {
+            labels = JSON.parse(labels)
+            labels.forEach(item => {
+                Label.findOrCreate({
+                    where: {
+                        type: articleObj.articleType,
+                        label: item
+                    }
+                })
+            }) 
+        }
+    }
+
+    static async getLabel(type) {
+        const labels = await Label.findAll({
+            where: {
+                type
+            }
+        })
+        return labels.map(item => item.label)
     }
 }
 
