@@ -1,5 +1,6 @@
 const requierDirectory = require("require-directory");
 const Router = require("koa-router");
+const { scheduleCronstyle } = require('./schedule')
 
 class InitManager {
   static initCore(app) {
@@ -7,6 +8,7 @@ class InitManager {
     InitManager.ininLoadRouter();
     InitManager.loadErrors()
     InitManager.loadConfig()
+    InitManager.schedule()
   }
 
   // 添加config到全局变量
@@ -35,6 +37,10 @@ class InitManager {
   static loadErrors() {
     const errors = require("./http-exception")
     global.errs = errors
+  }
+
+  static schedule() {
+      scheduleCronstyle()
   }
 }
 

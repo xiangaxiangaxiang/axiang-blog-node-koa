@@ -57,7 +57,7 @@ class Statistics extends Model {
     }
 
     static getStrTime(time=null) {
-        return stampToStr(time ? time : Date.now())
+        return stampToStr(time ? time : Date.now(), 'date')
     }
 
     // 增加网站访问量
