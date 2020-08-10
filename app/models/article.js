@@ -1,7 +1,7 @@
 const { Sequelize, Model, Op } = require('sequelize')
 const { sequelize } = require('../../core/db')
 const { Label } = require('./label')
-const {unset} = require('lodash')
+const { Statistics } = require('./statistics')
 
 class Article extends Model {
 
@@ -17,11 +17,13 @@ class Article extends Model {
         article.increment('clickNums', {
             by: 1
         })
-        unset(article, 'id')
-        unset(article, 'publish')
-        unset(article, 'content')
+        Statistics.addArticleHits()        
 
-        return article
+        return {
+            html: article.html,
+            title: article.title,
+            markdown: article.markdown
+        }
     }
 
     static async getArticles(offset, limit, searchText, label, articleType=null) {

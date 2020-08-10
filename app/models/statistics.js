@@ -104,22 +104,13 @@ class Statistics extends Model {
         }
     }
 
-    static async updateComments(time, type='add') {
-        const today = Statistics.getStrTime(time)
+    static async updateComments() {
+        const today = Statistics.getStrTime()
         const statistics = await Statistics.findOne({
             where: {
                 date: today
             }
         })
-        if (type === 'add') {
-            await statistics.increment('comments', {
-                by: 1
-            })
-        } else {
-            await statistics.decrement('comments', {
-                by: 1
-            })
-        }
     }
 }
 

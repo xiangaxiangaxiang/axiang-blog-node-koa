@@ -2,7 +2,7 @@ const Router = require('koa-router')
 
 const { Article } = require('@models/article')
 const { Comment } = require('@models/comment')
-const { ArticleListValidator, TypeVailidator } = require('@validator')
+const { ArticleListValidator, TypeValidator, ArticleIdValidator } = require('@validator')
 
 const router = new Router({
     prefix: '/front/article'
@@ -18,8 +18,6 @@ router.get('/list', async ctx => {
         searchText,
         articleType
     } = v.get('query')
-
-    console.log()
 
     const res = await Article.getArticles(offset, limit, searchText, label, articleType)
 
@@ -40,11 +38,16 @@ router.get('/list', async ctx => {
 })
 
 router.get('/detail', async ctx => {
-    
+    const v = await new ArticleIdValidator().validate(ctx)
+
+    const articleId = v.get('query.articleId')
+    const res = await Article.getArticleDetail(articleId)
+
+    throw new global.errs.Success(res)
 })
 
 router.get('/label', async ctx => {
-    const v = await new TypeVailidator().validate(ctx)
+    const v = await new TypeValidator().validate(ctx)
 
     const type = v.get('query.type')
 

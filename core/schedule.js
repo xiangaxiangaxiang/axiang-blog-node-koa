@@ -1,18 +1,17 @@
 const schedule = require('node-schedule')
 const { Statistics } = require('../app/models/statistics')
 
-function scheduleCronstyle(){
-    schedule.scheduleJob('1 * * * * *', async function(){
+function scheduleStatistics(){
+    schedule.scheduleJob('0 0 0 * * *', async function(){
         const strTime = Statistics.getStrTime()
-        const time = await Statistics.findOrCreate({
+        await Statistics.findOrCreate({
             where: {
                 date: strTime
             }
         })
-        console.log(time)
     }); 
 }
 
 module.exports = {
-    scheduleCronstyle
+    scheduleStatistics
 }

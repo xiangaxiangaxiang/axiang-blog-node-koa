@@ -1,6 +1,6 @@
 const requierDirectory = require("require-directory");
 const Router = require("koa-router");
-const { scheduleCronstyle } = require('./schedule')
+const { scheduleStatistics } = require('./schedule')
 
 class InitManager {
   static initCore(app) {
@@ -40,7 +40,7 @@ class InitManager {
   }
 
   static schedule() {
-      scheduleCronstyle()
+    scheduleStatistics()
   }
 }
 

@@ -3,6 +3,7 @@ const { sequelize } = require('../../core/db')
 const {Operation} = require('./operation')
 const {Notification} = require('./notification')
 const {NotificationType} = require('../lib/enum')
+const { Statistics } = require('./statistics')
 
 class Like extends Model {
 
@@ -29,6 +30,7 @@ class Like extends Model {
                 by: 1,
                 transaction: t
             })
+            Statistics.updateLikes(Date.now())
         })
     }
 
@@ -55,6 +57,7 @@ class Like extends Model {
                 by: 1,
                 transaction: t
             })
+            Statistics.updateLikes(data.createdAt, 'subtract')
         })
     }
 }

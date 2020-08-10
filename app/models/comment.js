@@ -6,6 +6,7 @@ const {Article} = require('./article')
 const {randomStr} = require('../lib/random')
 const {Notification} = require('./notification')
 const {NotificationType, UserType, OperationType} = require('../lib/enum')
+const { Statistics } = require('./statistics')
 
 class Comment extends Model {
     static async addComment(targetId, content, uid, commentId, replyUserId, type) {
@@ -39,6 +40,7 @@ class Comment extends Model {
                 by: 1,
                 transaction: t
             })
+            Statistics.updateComments()
         })
     }
 

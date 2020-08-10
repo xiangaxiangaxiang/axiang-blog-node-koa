@@ -21,22 +21,9 @@ const router = new Router({
     prefix: '/front/user'
 })
 
-router.get('/tourist', new Auth().tourist, async (ctx) => {
+router.get('/tourist', async (ctx) => {
     await Statistics.addWebHits()
-    const newUser = {
-        account: `tourist${Date.now()}`,
-        password: 'tourist',
-        nickname: `游客-${Date.now()}`,
-        userType: UserType.TOURIST,
-        avatar: `/img/avatar/default_${ Math.floor(Math.random() * 5) + 1 }.jpg`
-    }
-    if (ctx.tourist && (ctx.tourist.newTourist || ctx.tourist.expires)) {
-        const user = await User.createUser(newUser)
-        const token = generateTouristToken(user.uid, UserType.TOURIST)
-        ctx.cookies.set('auth', token, {
-            maxAge: 3 * 60 * 1000
-        })
-    }
+    throw new global.errs.Success()
 })
 
 router.post('/password', async (ctx) => {
