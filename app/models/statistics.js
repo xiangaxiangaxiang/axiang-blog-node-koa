@@ -68,9 +68,11 @@ class Statistics extends Model {
                 date: today
             }
         })
-        await statistics.increment('webHits', {
-            by: 1
-        })
+        if (statistics) {
+            await statistics.increment('webHits', {
+                by: 1
+            })
+        }
     }
 
     // 增加文章点击数
