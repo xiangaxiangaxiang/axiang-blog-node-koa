@@ -143,11 +143,15 @@ Comment.init({
         primaryKey: true,
         autoIncrement: true
     },
+    uniqueId: {
+        type: Sequelize.STRING,
+        unique: true,
+    },
     commentId: {
         type: Sequelize.STRING,
         require: true,
     },
-    targetId: Sequelize.INTEGER,
+    targetId: Sequelize.STRING,
     content: Sequelize.STRING,
     userId: Sequelize.STRING,
     replyUserId: {

@@ -192,7 +192,9 @@ class LikeValidator extends LinValidator {
     constructor() {
         super()
         this.targetId = [
-            new Rule('isInt', '参数不能为空')
+            new Rule('isLength', '参数不能为空', {
+                min: 1
+            })
         ]
         this.type = [
             new Rule('isInt', '类型不能为空')

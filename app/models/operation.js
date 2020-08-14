@@ -14,19 +14,19 @@ class Operation {
         if (type === OperationType.ARTICLE) {
             data = await Article.findOne({
                 where: {
-                    id: targetId
+                    articleId: targetId
                 }
             })
         } else if (type === OperationType.POST) {
             data = await Post.findOne({
                 where: {
-                    id: targetId
+                    postId: targetId
                 }
             })
         } else if (type === OperationType.COMMENT) {
             data = await Comment.findOne({
                 where: {
-                    id: targetId
+                    uniqueId: targetId
                 }
             })
         } else {

@@ -64,7 +64,7 @@ class Like extends Model {
 
 Like.init({
     userId: Sequelize.STRING,
-    targetId: Sequelize.INTEGER,
+    targetId: Sequelize.STRING,
     type: Sequelize.INTEGER,
 }, {
     sequelize,

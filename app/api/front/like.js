@@ -8,7 +8,7 @@ const router = new Router({
     prefix: '/front/like'
 })
 
-router.post('/', async (ctx) => {
+router.post('/', new Auth().user, async (ctx) => {
     const v = await new LikeValidator().validate(ctx)
 
     const { targetId, type, replyUserId } = v.get('body')

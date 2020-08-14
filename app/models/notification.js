@@ -147,7 +147,7 @@ Notification.init({
         primaryKey: true,
         autoIncrement: true
     },
-    targetId: Sequelize.INTEGER,
+    targetId: Sequelize.STRING,
     // 目标类型，比如文章，动态或者评论
     targetType: Sequelize.INTEGER,
     // 评论还是点赞

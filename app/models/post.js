@@ -30,6 +30,10 @@ Post.init({
         primaryKey: true,
         autoIncrement: true
     },
+    postId: {
+        type: Sequelize.STRING,
+        unique: true
+    },
     content: Sequelize.STRING,
     urls: Sequelize.STRING,
     type: Sequelize.INTEGER,
