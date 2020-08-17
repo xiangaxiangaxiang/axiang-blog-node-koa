@@ -9,7 +9,7 @@ class Auth {
 
     // 验证token
     _verifyToken(userToken) {
-        let errMsg = 'token不合法'
+        let errMsg = '未登录或登录已过期'
         if (!userToken) {
             throw new global.errs.Forbbiden(errMsg)
         }
@@ -63,6 +63,35 @@ class Auth {
             ctx.auth = {
                 uid: decode.uid,
                 userType: decode.userType
+            }
+
+            await next()
+        }
+    }
+
+    get tourist() {
+        return async (ctx, next) => {
+
+            // const userToken = basicAuth(ctx.req)
+            const userToken = ctx.cookies.get('auth')
+            
+            let uid = 0
+
+            if (userToken) {
+                try {
+                    // 解码token
+                    var decode = jwt.verify(userToken, global.config.security.secretKey)
+                } catch (error) {
+                    if (error.name == 'TokenExpireError') {
+                        errMsg = 'token已过期'
+                    }
+                    throw new global.errs.Forbbiden(errMsg)
+                }
+                uid = decode.uid
+            }
+
+            ctx.auth = {
+                uid
             }
 
             await next()

@@ -2,7 +2,9 @@ const Router = require('koa-router')
 
 const { Article } = require('@models/article')
 const { Comment } = require('@models/comment')
+const { Like } = require('@models/like')
 const { ArticleListValidator, TypeValidator, ArticleIdValidator } = require('@validator')
+const {Auth} = require('@middlewares/auth')
 
 const router = new Router({
     prefix: '/front/article'
@@ -37,11 +39,17 @@ router.get('/list', async ctx => {
     throw new global.errs.Success(res)
 })
 
-router.get('/detail', async ctx => {
+router.get('/detail', new Auth().tourist, async ctx => {
     const v = await new ArticleIdValidator().validate(ctx)
+    const uid = ctx.auth.uid
 
     const articleId = v.get('query.articleId')
     const res = await Article.getArticleDetail(articleId)
+    let likeStatus = false
+    if (uid) {
+        likeStatus = await Like.getLikeStatus(uid, articleId)
+    }
+    res.likeStatus = likeStatus
 
     throw new global.errs.Success(res)
 })

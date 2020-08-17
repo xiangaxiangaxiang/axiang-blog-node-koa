@@ -26,6 +26,14 @@ router.get('/tourist', async (ctx) => {
     throw new global.errs.Success()
 })
 
+router.post('/logout', async (ctx) => {
+    ctx.cookies.set('auth', '', {
+        maxAge: 0,
+        overwrite: true
+    })
+    throw new global.errs.Success()
+})
+
 router.post('/password', async (ctx) => {
     const v = await new UpdatePasswordValidator().validate(ctx)
 

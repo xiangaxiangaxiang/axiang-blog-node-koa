@@ -60,6 +60,19 @@ class Like extends Model {
             Statistics.updateLikes(data.createdAt, 'subtract')
         })
     }
+
+    static async getLikeStatus(uid, targetId) {
+        const like = await Like.findOne({
+            where: {
+                userId: uid,
+                targetId
+            }
+        })
+        if (like) {
+            return true
+        }
+        return false
+    }
 }
 
 Like.init({
