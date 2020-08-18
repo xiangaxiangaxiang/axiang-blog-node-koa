@@ -24,7 +24,7 @@
     "test": "test"
   },
   "scripts": {
-    "start:dev": "nodemon --inspect-brk",
+    "start:dev": "nodemon app.js",
     "start:prod": "node app.js"
   },
   "repository": {
