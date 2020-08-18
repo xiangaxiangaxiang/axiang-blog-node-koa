@@ -24,9 +24,9 @@ class Like extends Model {
                 type,
                 userId
             }, {transaction: t})
-            await Notification.addNotification(targetId, type, NotificationType.LIKE, userId, replyUserId)
+            Notification.addNotification(targetId, type, NotificationType.LIKE, userId, replyUserId)
             const data = await Operation.getData(targetId, type)
-            await data.increment('likeNums', {
+            data.increment('likeNums', {
                 by: 1,
                 transaction: t
             })
@@ -51,9 +51,9 @@ class Like extends Model {
                 force: true,
                 transaction: t
             })
-            await Notification.cancellationNotice(targetId, type, userId, replyUserId)
+            Notification.cancellationNotice(targetId, type, userId, replyUserId)
             const data = await Operation.getData(targetId, type)
-            await data.decrement('likeNums', {
+            data.decrement('likeNums', {
                 by: 1,
                 transaction: t
             })

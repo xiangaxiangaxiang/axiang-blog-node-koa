@@ -14,7 +14,7 @@ router.post('/', new Auth().user, async (ctx) => {
     const { targetId, type, replyUserId } = v.get('body')
     const uid = ctx.auth.uid
 
-    await Like.like(targetId, type, uid, replyUserId, type)
+    Like.like(targetId, type, uid, replyUserId, type)
     throw new global.errs.Success() 
 })
 
@@ -24,7 +24,7 @@ router.post('/dislike', new Auth().user, async (ctx) => {
     const { targetId, type } = v.get('body')
     const uid = ctx.auth.uid
 
-    await Like.dislike(targetId, type, uid)
+    Like.dislike(targetId, type, uid)
     throw new global.errs.Success() 
 })
 
