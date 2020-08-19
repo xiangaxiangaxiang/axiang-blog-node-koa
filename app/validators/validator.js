@@ -219,7 +219,7 @@ class CommentValidator extends LinValidator {
     constructor() {
         super()
         this.targetId = [
-            new Rule('isInt', '参数不能为空')
+            new Rule('isLength', '参数不能为空', {min: 1})
         ]
         this.type = [
             new Rule('isInt', '参数不能为空')
@@ -229,7 +229,7 @@ class CommentValidator extends LinValidator {
         ]
         this.replyUserId = [
             new Rule('isOptional', ''),
-            new Rule('isInt', '回复用户Id格式不正确')
+            new Rule('isLength', '回复用户Id格式不正确', {min: 1})
         ]
     }
 

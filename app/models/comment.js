@@ -20,6 +20,7 @@ class Comment extends Model {
             }
         }
         const comment = {
+            uniqueId: randomStr(),
             commentId: commentId ? commentId : randomStr(),
             targetId,
             content,
@@ -76,7 +77,7 @@ class Comment extends Model {
         await comment.update({content: '该评论已被删除', isDeleted: 1})
     }
 
-    static async getCommentList(offset, limit, searchText) {
+    static async getCommentList(offset, limit) {
         let query = {
             offset,
             limit
@@ -118,7 +119,7 @@ class Comment extends Model {
             let comment = comments[i]
             if (index < 0) {
                 const topComment = {
-                    id: comment.id,
+                    uniqueId: comment.uniqueId,
                     commentId: comment.commentId,
                     targetId: comment.targetId,
                     content: comment.content,
