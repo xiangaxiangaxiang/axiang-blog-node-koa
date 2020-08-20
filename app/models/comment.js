@@ -29,7 +29,7 @@ class Comment extends Model {
         if (replyUserId) {
             comment.replyUserId = replyUserId
         }
-        return sequelize.transaction(async t => {
+        sequelize.transaction(async t => {
             await Comment.create(comment, {transaction: t})
             await Notification.addNotification(targetId, type, NotificationType.COMMENT, uid, replyUserId)
             const article = await Article.findOne({
@@ -45,21 +45,21 @@ class Comment extends Model {
         })
     }
 
-    static async getUserInfo(uid) {
-        const user = await User.findOne({
-            where: {
-                uid: uid
-            }
-        })
-        if(!user) {
-            throw new global.errs.NotFound('账号不存在')
-        }
-        return {
-            uid,
-            nickname: user.nickname,
-            avatar: user.avatar
-        }
-    }
+    // static async getUserInfo(uid) {
+    //     const user = await User.findAll({
+    //         where: {
+    //             uid: uid
+    //         }
+    //     })
+    //     if(!user) {
+    //         throw new global.errs.NotFound('账号不存在')
+    //     }
+    //     return {
+    //         uid,
+    //         nickname: user.nickname,
+    //         avatar: user.avatar
+    //     }
+    // }
 
     static async deleteComment(id, uid, userType) {
         const comment = await Comment.findOne({
@@ -99,8 +99,18 @@ class Comment extends Model {
             commentList
         }
     }
+
+    static async getUserInfo(ids) {
+        const users = await User.findAll({
+            where: {
+                uid: [...new Set(ids)]
+            },
+            attributes: ['uid', 'nickname', 'avatar']
+        })
+        return users
+    }
     
-    async getComment(targetId) {
+    static async getComment(targetId) {
         const comments = await Comment.findAll({
             where: {
                 targetId
@@ -109,6 +119,14 @@ class Comment extends Model {
                 ['updated_at', 'DESC']
             ]
         })
+        const userIdList = []
+        comments.forEach(item => {
+            userIdList.push(item.userId)
+            if (item.replyUserId) {
+                userIdList.push(item.replyUserId)
+            }
+        })
+        const userInfoList = await this.getUserInfo(userIdList)
         // return comments
         // 创建commentId数据和新数组用来整合数据
         const commentIdArr = []
@@ -116,19 +134,29 @@ class Comment extends Model {
         for (let i = 0;i < comments.length;i++) {
             let commentId = comments[i].commentId
             let index = commentIdArr.indexOf(commentId)
-            let comment = comments[i]
-            if (index < 0) {
-                const topComment = {
-                    uniqueId: comment.uniqueId,
-                    commentId: comment.commentId,
-                    targetId: comment.targetId,
-                    content: comment.content,
-                    userInfo: comment.userInfo,
-                    replyUserInfo: comment.replyUserInfo,
-                    likeNums: comment.likeNums,
-                    comments: []
+            console.log(comments[i].created_at)
+            let comment = {
+                uniqueId: comments[i].uniqueId,
+                commentId: comments[i].commentId,
+                targetId: comments[i].targetId,
+                content: comments[i].content,
+                likeNums: comments[i].likeNums,
+                createdTime: comments[i].created_at
+            }
+            for (let j in userInfoList) {
+                if (userInfoList[j].uid === comments[i].userId) {
+                    comment.userInfo = userInfoList[j]
                 }
-                dataArr.push(topComment)
+                if (userInfoList[j].uid === comments[i].replyUserId) {
+                    comment.replyUserInfo = userInfoList[j]
+                }
+                if (comment.userInfo && (!comments[i].replyUserId || (comments[i].replyUserId && comment.replyUserInfo) )) {
+                    break
+                }
+            }
+            if (index < 0) {
+                comment.replyComments = []
+                dataArr.push(comment)
                 commentIdArr.push(commentId)
             } else {
                 dataArr[index].comments.push(comment)

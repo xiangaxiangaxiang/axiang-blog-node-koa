@@ -9,6 +9,7 @@ const router = new Router({
 })
 
 router.post('/add', new Auth().user, async (ctx) => {
+    const t1 = Date.now()
     const v = await new CommentValidator().validate(ctx)
 
     const { targetId, content, type } = v.get('body')
@@ -16,7 +17,7 @@ router.post('/add', new Auth().user, async (ctx) => {
     // 如果是回复别人
     const { commentId, replyUserId } = v.get('body')
 
-    await Comment.addComment(targetId, content, uid, commentId, replyUserId, type)
+    Comment.addComment(targetId, content, uid, commentId, replyUserId, type)
     throw new global.errs.Success() 
 })
 
@@ -36,7 +37,7 @@ router.get('/getComment', async (ctx) => {
     if (!targetId) {
         throw new global.errs.ParameterException()
     }
-    const data = await new Comment().getComment(targetId)
+    const data = await Comment.getComment(targetId)
     
     throw new global.errs.Success(data) 
 })
