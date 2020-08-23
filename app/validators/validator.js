@@ -343,6 +343,23 @@ class ArticleIdValidator extends LinValidator {
     }
 }
 
+class StringIdValidator extends LinValidator {
+    validateStringId(vals) {
+        const data = vals.body
+        let id
+        for (let i in data) {
+            if (i.toLowerCase().indexOf('id') > -1) {
+                id = data[i]
+                break
+            }
+        }
+        const type = Object.prototype.toString.call(id)
+        if (type !== '[object Number]' && type !== '[object String]') {
+            throw new Error('请正确传入参数')
+        }
+    }
+}
+
 module.exports = {
     RegisterValidator,
     LoginValidator,
@@ -359,5 +376,6 @@ module.exports = {
     UpdatePasswordValidator,
     ArticleListValidator,
     TypeValidator,
-    ArticleIdValidator
+    ArticleIdValidator,
+    StringIdValidator
 }

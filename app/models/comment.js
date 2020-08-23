@@ -61,17 +61,16 @@ class Comment extends Model {
     //     }
     // }
 
-    static async deleteComment(id, uid, userType) {
+    static async deleteComment(uniqueId, uid, userType) {
         const comment = await Comment.findOne({
             where: {
-                id
+                uniqueId
             }
         })
         if (!comment) {
             throw new global.errs.NotFound('评论不存在')
         }
-        const userInfo = JSON.parse(comment.userInfo)
-        if (userInfo.uid !== uid && userType !== UserType.ADMIN) {
+        if (comment.userId !== uid && userType !== UserType.ADMIN) {
             throw new global.errs.AuthFailed('不能删除别人的评论-o-')
         }
         await comment.update({content: '该评论已被删除', isDeleted: 1})
@@ -116,7 +115,7 @@ class Comment extends Model {
                 targetId
             },
             order: [
-                ['updated_at', 'DESC']
+                ['created_at', 'DESC']
             ]
         })
         const userIdList = []
@@ -158,7 +157,7 @@ class Comment extends Model {
                 dataArr.push(comment)
                 commentIdArr.push(commentId)
             } else {
-                dataArr[index].comments.push(comment)
+                dataArr[index].replyComments.push(comment)
             }
         }
         return dataArr
