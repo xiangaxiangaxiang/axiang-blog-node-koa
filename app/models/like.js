@@ -18,7 +18,7 @@ class Like extends Model {
         if (likeItem) {
             throw new global.errs.LikeError()
         }
-        return sequelize.transaction(async t => {
+        await sequelize.transaction(async t => {
             await Like.create({
                 targetId,
                 type,
@@ -26,7 +26,7 @@ class Like extends Model {
             }, {transaction: t})
             Notification.addNotification(targetId, type, NotificationType.LIKE, userId, replyUserId)
             const data = await Operation.getData(targetId, type)
-            data.increment('likeNums', {
+            await data.increment('likeNums', {
                 by: 1,
                 transaction: t
             })

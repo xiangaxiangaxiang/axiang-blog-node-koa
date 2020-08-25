@@ -117,15 +117,18 @@ class Comment extends Model {
                 targetId
             },
             order: [
+                ['replyUserId', 'ASC'],
                 ['created_at', 'DESC']
             ]
         })
         const userIdList = []
+        const targetIdList = []
         comments.forEach(item => {
             userIdList.push(item.userId)
             if (item.replyUserId) {
                 userIdList.push(item.replyUserId)
             }
+            targetIdList.push(item.uniqueId)
         })
         const userInfoList = await this.getUserInfo(userIdList)
         let likes = []
@@ -133,7 +136,7 @@ class Comment extends Model {
             likes = await Like.findAll({
                 where: {
                     userId: uid,
-                    targetId,
+                    targetId: targetIdList,
                     type: OperationType.COMMENT
                 }
             })
@@ -155,7 +158,7 @@ class Comment extends Model {
                 likeStatus: false
             }
             for (let k in likes) {
-                if (likes[k].targetId === comments[i].userId) {
+                if (likes[k].targetId === comments[i].uniqueId) {
                     comment.likeStatus = true
                     break
                 }
