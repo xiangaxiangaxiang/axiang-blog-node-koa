@@ -14,7 +14,7 @@ router.post('/', new Auth().user, async (ctx) => {
     const { targetId, type, replyUserId } = v.get('body')
     const uid = ctx.auth.uid
 
-    Like.like(targetId, type, uid, replyUserId, type)
+    Like.like(targetId, type, uid, replyUserId)
     throw new global.errs.Success() 
 })
 

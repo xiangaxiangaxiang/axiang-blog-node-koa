@@ -3,10 +3,12 @@ const {Sequelize, Model, Op} = require('sequelize')
 const { sequelize } = require('../../core/db')
 const {User} = require('./user')
 const {Article} = require('./article')
+const { Like } = require('./like')
 const {randomStr} = require('../lib/random')
 const {Notification} = require('./notification')
 const {NotificationType, UserType, OperationType} = require('../lib/enum')
 const { Statistics } = require('./statistics')
+const like = require('./like')
 
 class Comment extends Model {
     static async addComment(targetId, content, uid, commentId, replyUserId, type) {
@@ -109,7 +111,7 @@ class Comment extends Model {
         return users
     }
     
-    static async getComment(targetId) {
+    static async getComment(targetId, uid) {
         const comments = await Comment.findAll({
             where: {
                 targetId
@@ -126,6 +128,16 @@ class Comment extends Model {
             }
         })
         const userInfoList = await this.getUserInfo(userIdList)
+        let likes = []
+        if (uid) {
+            likes = await Like.findAll({
+                where: {
+                    userId: uid,
+                    targetId,
+                    type: OperationType.COMMENT
+                }
+            })
+        }
         // return comments
         // 创建commentId数据和新数组用来整合数据
         const commentIdArr = []
@@ -139,7 +151,14 @@ class Comment extends Model {
                 targetId: comments[i].targetId,
                 content: comments[i].content,
                 likeNums: comments[i].likeNums,
-                createdTime: comments[i].created_at
+                createdTime: comments[i].created_at,
+                likeStatus: false
+            }
+            for (let k in likes) {
+                if (likes[k].targetId === comments[i].userId) {
+                    comment.likeStatus = true
+                    break
+                }
             }
             for (let j in userInfoList) {
                 if (userInfoList[j].uid === comments[i].userId) {

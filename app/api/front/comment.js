@@ -32,12 +32,13 @@ router.post('/delete', new Auth().user, async (ctx) => {
     throw new global.errs.Success() 
 })
 
-router.get('/getComment', async (ctx) => {
+router.get('/getComment', new Auth().tourist, async (ctx) => {
     const targetId = ctx.request.query.targetId
     if (!targetId) {
         throw new global.errs.ParameterException()
     }
-    const data = await Comment.getComment(targetId)
+    const uid = ctx.auth.uid
+    const data = await Comment.getComment(targetId, uid)
     
     throw new global.errs.Success(data) 
 })
