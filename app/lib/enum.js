@@ -41,7 +41,8 @@ const ArticleType = {
     isThisType,
     TECHNOLOGY: 100,
     LIFE: 200,
-    DREAM: 300
+    DREAM: 300,
+    ABOUT: 400
 }
 
 const CommentType = {

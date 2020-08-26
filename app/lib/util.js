@@ -3,6 +3,7 @@ function getArticleId(type) {
     articleMap.set(100, 'te')
     articleMap.set(200, 'lv')
     articleMap.set(300, 'dr')
+    articleMap.set(400, 'ab')
     return articleMap.get(type) + Date.now().toString(16)
 }
 

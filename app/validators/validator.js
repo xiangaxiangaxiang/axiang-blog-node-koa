@@ -288,8 +288,8 @@ class PaginationsValidator extends LinValidator {
 class ArticlePublishValidator extends LinValidator {
     constructor() {
         super()
-        this.id = [
-            new Rule('isInt', '参数不能为空')
+        this.articleId = [
+            new Rule('isLength', '参数不能为空', {min: 1})
         ]
         this.publish = [
             new Rule('isInt', '参数不能为空')

@@ -32,7 +32,9 @@ class Article extends Model {
             limit,
             order: [['updated_at', 'DESC']]
         }
-        let filter = {}
+        let filter = {
+            publish: 1
+        }
         if (searchText) {
             filter.title = {
                 [Op.like]: `%${searchText}%`

@@ -69,7 +69,7 @@ class Statistics extends Model {
             }
         })
         if (statistics) {
-            await statistics.increment('webHits', {
+            statistics.increment('webHits', {
                 by: 1
             })
         }
@@ -83,9 +83,11 @@ class Statistics extends Model {
                 date: today
             }
         })
-        await statistics.increment('articleHits', {
-            by: 1
-        })
+        if (statistics) {
+            statistics.increment('articleHits', {
+                by: 1
+            })
+        }
     }
 
     static async updateLikes(time, type='add') {
@@ -95,14 +97,16 @@ class Statistics extends Model {
                 date
             }
         })
-        if (type === 'add') {
-            await statistics.increment('likes', {
-                by: 1
-            })
-        } else {
-            await statistics.decrement('likes', {
-                by: 1
-            })
+        if (statistics) {
+            if (type === 'add') {
+                statistics.increment('likes', {
+                    by: 1
+                })
+            } else {
+                statistics.decrement('likes', {
+                    by: 1
+                })
+            }
         }
     }
 
@@ -113,6 +117,11 @@ class Statistics extends Model {
                 date: today
             }
         })
+        if (statistics) {
+            statistics.increment('comments', {
+                by: 1
+            })
+        }
     }
 }
 

@@ -78,7 +78,7 @@ class Comment extends Model {
         await comment.update({content: '该评论已被删除', isDeleted: 1})
     }
 
-    static async getCommentList(offset, limit) {
+    static async getCommentList(offset, limit, searchText=null) {
         let query = {
             offset,
             limit

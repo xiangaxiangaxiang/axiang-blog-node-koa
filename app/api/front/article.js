@@ -63,4 +63,15 @@ router.get('/label', async ctx => {
     throw new global.errs.Success(res)
 })
 
+router.get('/about', async ctx => {
+    const about = await Article.findOne({
+        where: {
+            articleType: 400
+        },
+        order: [['updated_at', 'DESC']]
+    })
+    let html = about ? about.html : ''
+    throw new global.errs.Success(html)
+})
+
 module.exports = router
