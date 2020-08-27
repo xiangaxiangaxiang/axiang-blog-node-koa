@@ -25,14 +25,4 @@ router.get('/unread_nums', new Auth().user, async ctx => {
     throw new global.errs.Success(res)
 })
 
-router.post('/read', new Auth().user, async (ctx) => {
-    const uid = ctx.auth.uid
-    const type = ctx.request.body.type
-    if (!type) {
-        throw new global.errs.ParameterException()
-    }
-    await Notification.read(uid, type)
-    throw global.errs.success()
-})
-
 module.exports = router

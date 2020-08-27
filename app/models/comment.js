@@ -33,13 +33,13 @@ class Comment extends Model {
         }
         sequelize.transaction(async t => {
             await Comment.create(comment, {transaction: t})
-            await Notification.addNotification(targetId, type, NotificationType.COMMENT, uid, replyUserId)
+            Notification.addNotification(comment.uniqueId, type, NotificationType.COMMENT, uid, replyUserId)
             const article = await Article.findOne({
                 where: {
                     articleId: targetId
                 }
             })
-            await article.increment('commentsNums', {
+            article.increment('commentsNums', {
                 by: 1,
                 transaction: t
             })
@@ -75,7 +75,7 @@ class Comment extends Model {
         if (comment.userId !== uid && userType !== UserType.ADMIN) {
             throw new global.errs.AuthFailed('不能删除别人的评论-o-')
         }
-        await comment.update({content: '该评论已被删除', isDeleted: 1})
+        comment.update({content: '该评论已被删除', isDeleted: 1})
     }
 
     static async getCommentList(offset, limit, searchText=null) {

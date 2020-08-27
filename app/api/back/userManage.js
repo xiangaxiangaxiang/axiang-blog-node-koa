@@ -33,7 +33,8 @@ router.post('/admin_login', async (ctx) => {
         avatar: user.avatar
     }
     ctx.cookies.set('auth', token, {
-        maxAge: 24 * 60 * 1000
+        maxAge: global.config.security.expiresIn * 1000,
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
     })
     throw new global.errs.Success(res)
 })
@@ -120,6 +121,14 @@ router.post('/enable', new Auth().admin, async (ctx) => {
         where: {
             id
         }
+    })
+    throw new global.errs.Success()
+})
+
+router.post('/logout', async (ctx) => {
+    ctx.cookies.set('auth', '', {
+        maxAge: 0,
+        overwrite: true
     })
     throw new global.errs.Success()
 })

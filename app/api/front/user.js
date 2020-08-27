@@ -80,7 +80,8 @@ router.post('/login', async (ctx) => {
     // 生成token
     const token = generateToken(user.uid, user.userType)
     ctx.cookies.set('auth', token, {
-        maxAge: 24 * 60 * 1000
+        maxAge: global.config.security.expiresIn * 1000,
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
     })
     const res = {
         uid: user.uid,

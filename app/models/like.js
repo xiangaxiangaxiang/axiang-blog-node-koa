@@ -26,7 +26,7 @@ class Like extends Model {
             }, {transaction: t})
             Notification.addNotification(targetId, type, NotificationType.LIKE, userId, replyUserId)
             const data = await Operation.getData(targetId, type)
-            await data.increment('likeNums', {
+            data.increment('likeNums', {
                 by: 1,
                 transaction: t
             })

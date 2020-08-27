@@ -17,8 +17,7 @@ class Article extends Model {
         article.increment('clickNums', {
             by: 1
         })
-        Statistics.addArticleHits()        
-
+        Statistics.addArticleHits()
         return {
             html: article.html,
             title: article.title,
@@ -68,7 +67,7 @@ class Article extends Model {
         if (!article) {
             throw new global.errs.NotFound('文章不存在')
         }
-        await article.destroy()
+        article.destroy()
     }
 
     // 修改文章
@@ -81,7 +80,7 @@ class Article extends Model {
         if (!article) {
             throw new global.errs.NotFound('文章不存在')
         }
-        await article.update(newArticle)
+        article.update(newArticle)
     }
 
     // 修改发布状态
@@ -94,7 +93,7 @@ class Article extends Model {
         if (!article) {
             throw new global.errs.NotFound('文章不存在')
         }
-        await article.update({ publish })
+        article.update({ publish })
     }
 
     static async upsertArticle(articleId, articleObj) {

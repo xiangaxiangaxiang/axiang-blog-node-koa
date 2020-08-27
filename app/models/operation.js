@@ -47,19 +47,19 @@ class Operation {
         if (type === OperationType.ARTICLE) {
             data = await Article.findAll({
                 where: {
-                    id: targetIds
+                    articleId: targetIds
                 }
             })
         } else if (type === OperationType.POST) {
             data = await Post.findAll({
                 where: {
-                    id: targetIds
+                    postId: targetIds
                 }
             })
         } else if (type === OperationType.COMMENT) {
             data = await Comment.findAll({
                 where: {
-                    id: targetIds
+                    uniqueId: targetIds
                 }
             })
         }

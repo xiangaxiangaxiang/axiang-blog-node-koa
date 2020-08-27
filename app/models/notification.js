@@ -60,6 +60,13 @@ class Notification extends Model {
     }
 
     static async getNotification(uid, type, limit, offset) {
+        Notification.update({
+            unread: 0
+        }, {
+            where: {
+                userId: uid
+            }
+        })
         const notices = await Notification.findAll({
             where: {
                 userId: uid,
@@ -73,43 +80,29 @@ class Notification extends Model {
             ]
         })
         let operationUserIds = [],
-            postIds = [],
-            commentIds = [],
-            articleIds = []
+            commentIds = []
         notices.forEach(item => {
             operationUserIds.push(item.operationUserId)
-            if (item.targetType === OperationType.ARTICLE) {
-                articleIds.push(item.targetId)
-            } else if (item.targetType === OperationType.COMMENT) {
-                commentIds.push(item.targetId)
-            } else {
-                postIds.push(item.targetId)
-            }
+            commentIds.push(item.targetId)
         })
         const users = await User.findAll({
             where: {
                 uid: [... new Set(operationUserIds)]
             }
         })
-        const posts = await Operation.getAllData([... new Set(postIds)] , OperationType.POST)
         const comments = await Operation.getAllData([... new Set(commentIds)], OperationType.COMMENT)
-        const articles = await Operation.getAllData([... new Set(articleIds)], OperationType.ARTICLE)
-        const targetData = {
-            [OperationType.COMMENT]: comments,
-            [OperationType.ARTICLE]: articles,
-            [OperationType.POST]: posts
-        }
-        const res= this.formatData(notices, users, targetData)
+        const res = this.formatData(notices, users, comments)
         return res
     }
 
-    static formatData(notices, users, targetData) {
+    static formatData(notices, users, comments) {
         let res = []
         notices.forEach(notice => {
             let item = {
                 targetType: notice.targetType,
                 targetId: notice.targetId,
-                unread: notice.unread
+                unread: notice.unread,
+                targetName: ''
             }
             for (let i = 0; i < users.length; i++) {
                 if (notice.operationUserId === users[i].uid) {
@@ -117,27 +110,15 @@ class Notification extends Model {
                     break
                 }
             }
-            const data = targetData[notice.targetType]
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].id === notice.targetId) {
-                    item.targetName = notice.targetType === OperationType.ARTICLE ? data[i].title : data[i].content
+            for (let i = 0; i < comments.length; i++) {
+                if (comments[i].uniqueId === notice.targetId) {
+                    item.targetName = comments[i].content
                     break
                 }
             }
             res.push(item)
         })
         return res
-    }
-
-    static async read(uid, type) {
-        await Notification.update({
-            unread: 0
-        }, {
-            where: {
-                userId: uid,
-                type
-            }
-        })
     }
 }
 

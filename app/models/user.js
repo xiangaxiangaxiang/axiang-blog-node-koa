@@ -87,7 +87,7 @@ class User extends Model {
         if (!correct) {
             throw new global.errs.AuthFailed('密码不正确')
         }
-        await User.update({
+        User.update({
             password: newPassword
         }, {
             where: {
@@ -110,7 +110,7 @@ class User extends Model {
             nickname: nickname ? nickname : user.nickname,
             avatar: avatar ? avatar : user.avatar
         }
-        await User.update(userInfo, {
+        User.update(userInfo, {
             where: {
                 uid
             }
