@@ -14,8 +14,8 @@ router.get('/', new Auth().user, async (ctx) => {
     const uid = ctx.auth.uid
     const { offset, limit, type } = v.get('query')
 
-    const notifications = await Notification.getNotification(uid, type, limit, offset)
-    throw new global.errs.Success(notifications)
+    const res = await Notification.getNotification(uid, type, limit, offset)
+    throw new global.errs.Success(res)
 })
 
 router.get('/unread_nums', new Auth().user, async ctx => {

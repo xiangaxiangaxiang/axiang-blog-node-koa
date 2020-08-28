@@ -67,6 +67,12 @@ class Notification extends Model {
                 userId: uid
             }
         })
+        const total = await Notification.count({
+            where: {
+                userId: uid,
+                type
+            }
+        })
         const notices = await Notification.findAll({
             where: {
                 userId: uid,
@@ -92,7 +98,10 @@ class Notification extends Model {
         })
         const comments = await Operation.getAllData([... new Set(commentIds)], OperationType.COMMENT)
         const res = this.formatData(notices, users, comments)
-        return res
+        return {
+            notices: res,
+            total
+        }
     }
 
     static formatData(notices, users, comments) {

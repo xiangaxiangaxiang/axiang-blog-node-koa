@@ -26,11 +26,13 @@ class Like extends Model {
             }, {transaction: t})
             Notification.addNotification(targetId, type, NotificationType.LIKE, userId, replyUserId)
             const data = await Operation.getData(targetId, type)
-            data.increment('likeNums', {
+            console.log(333)
+            Statistics.updateLikes(Date.now())
+            await data.increment('likeNums', {
                 by: 1,
                 transaction: t
             })
-            Statistics.updateLikes(Date.now())
+            console.log(444)
         })
     }
 
@@ -53,11 +55,11 @@ class Like extends Model {
             })
             Notification.cancellationNotice(targetId, type, userId, replyUserId)
             const data = await Operation.getData(targetId, type)
-            data.decrement('likeNums', {
+            Statistics.updateLikes(data.createdAt, 'subtract')
+            await data.decrement('likeNums', {
                 by: 1,
                 transaction: t
             })
-            Statistics.updateLikes(data.createdAt, 'subtract')
         })
     }
 
