@@ -111,12 +111,16 @@ class Comment extends Model {
         return users
     }
     
-    static async getComment(targetId, uid) {
+    static async getComment(targetId, uid, offset, limit) {
+        const total = await Comment.count({where: {targetId}})
         const comments = await Comment.findAll({
             where: {
                 targetId
             },
+            limit,
+            offset,
             order: [
+                ['commentId', 'DESC'],
                 ['replyUserId', 'ASC'],
                 ['created_at', 'DESC']
             ]
@@ -182,7 +186,10 @@ class Comment extends Model {
                 dataArr[index].replyComments.push(comment)
             }
         }
-        return dataArr
+        return {
+            total,
+            comments: dataArr
+        }
     }
 }
 

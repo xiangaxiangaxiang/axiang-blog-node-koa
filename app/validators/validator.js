@@ -345,7 +345,7 @@ class ArticleIdValidator extends LinValidator {
 
 class StringIdValidator extends LinValidator {
     validateStringId(vals) {
-        const data = vals.body
+        const data = JSON.stringify(vals.body) === '{}' ? vals.query : vals.body
         let id
         for (let i in data) {
             if (i.toLowerCase().indexOf('id') > -1) {
@@ -357,6 +357,15 @@ class StringIdValidator extends LinValidator {
         if (type !== '[object Number]' && type !== '[object String]') {
             throw new Error('请正确传入参数')
         }
+    }
+}
+
+class GetCommentValidator extends PaginationsValidator {
+    constructor() {
+        super()
+        this.targetId = [
+            new Rule('isLength', '请传入targetID', {min: 1})
+        ]
     }
 }
 
@@ -377,5 +386,6 @@ module.exports = {
     ArticleListValidator,
     TypeValidator,
     ArticleIdValidator,
-    StringIdValidator
+    StringIdValidator,
+    GetCommentValidator
 }

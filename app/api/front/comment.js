@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 
-const {CommentValidator, StringIdValidator} = require('@validator')
+const {CommentValidator, StringIdValidator, GetCommentValidator} = require('@validator')
 const {Comment} = require('@models/comment')
 const {Auth} = require('@middlewares/auth')
 
@@ -9,7 +9,6 @@ const router = new Router({
 })
 
 router.post('/add', new Auth().user, async (ctx) => {
-    const t1 = Date.now()
     const v = await new CommentValidator().validate(ctx)
 
     const { targetId, content, type } = v.get('body')
@@ -33,12 +32,11 @@ router.post('/delete', new Auth().user, async (ctx) => {
 })
 
 router.get('/getComment', new Auth().tourist, async (ctx) => {
-    const targetId = ctx.request.query.targetId
-    if (!targetId) {
-        throw new global.errs.ParameterException()
-    }
+    const v = await new GetCommentValidator().validate(ctx)
+    const { targetId, offset, limit } = v.get('query')
+    
     const uid = ctx.auth.uid
-    const data = await Comment.getComment(targetId, uid)
+    const data = await Comment.getComment(targetId, uid, offset, limit)
     
     throw new global.errs.Success(data) 
 })
