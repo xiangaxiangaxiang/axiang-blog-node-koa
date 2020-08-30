@@ -9,11 +9,11 @@ const {Notification} = require('./notification')
 const {NotificationType, UserType, OperationType} = require('../lib/enum')
 const { Statistics } = require('./statistics')
 const like = require('./like')
+const { uniq } = require('lodash')
 
 class Comment extends Model {
     static async addComment(targetId, content, uid, commentId, replyUserId, type) {
         // const userInfo = await Comment.getUserInfo(uid)
-        let replyUserInfo = {}
         if (replyUserId) {
             // 判断评论是否存在
             const comment = await Comment.findOne({where: {commentId}})
@@ -31,20 +31,49 @@ class Comment extends Model {
         if (replyUserId) {
             comment.replyUserId = replyUserId
         }
-        sequelize.transaction(async t => {
-            await Comment.create(comment, {transaction: t})
+        let newComment
+        await sequelize.transaction(async t => {
+            newComment = await Comment.create(comment, {transaction: t})
             Notification.addNotification(comment.uniqueId, type, NotificationType.COMMENT, uid, replyUserId)
             const article = await Article.findOne({
                 where: {
                     articleId: targetId
                 }
             })
-            article.increment('commentsNums', {
+            await article.increment('commentsNums', {
                 by: 1,
                 transaction: t
             })
             Statistics.updateComments()
         })
+        if (newComment) {
+            const ids = [uid]
+            if (replyUserId ) ids.push(replyUserId)
+            const userInfo = await this.getUserInfo(ids)
+            let comment = {
+                uniqueId: newComment.uniqueId,
+                commentId: newComment.commentId,
+                targetId: newComment.targetId,
+                content: newComment.content,
+                likeNums: newComment.likeNums,
+                createdTime: newComment.created_at,
+                isDeleted: newComment.isDeleted,
+                likeStatus: false
+            }
+            userInfo.forEach(item => {
+                if (item.uid === uid) {
+                    comment.userInfo = item
+                }
+                if (item.uid === replyUserId) {
+                    comment.replyUserInfo = item
+                }
+            })
+            if (!replyUserId) {
+                comment.replyComments = []
+            }
+            return comment
+        }
+        return {}
     }
 
     // static async getUserInfo(uid) {
@@ -76,6 +105,13 @@ class Comment extends Model {
             throw new global.errs.AuthFailed('不能删除别人的评论-o-')
         }
         comment.update({content: '该评论已被删除', isDeleted: 1})
+        Like.destroy({
+            where: {
+                userId: uid,
+                targetId: uniqueId,
+                type: OperationType.COMMENT
+            }
+        })
     }
 
     static async getCommentList(offset, limit, searchText=null) {
@@ -112,17 +148,29 @@ class Comment extends Model {
     }
     
     static async getComment(targetId, uid, offset, limit) {
-        const total = await Comment.count({where: {targetId}})
-        const comments = await Comment.findAll({
+        const allCommentId = await Comment.findAll({
             where: {
                 targetId
             },
-            limit,
-            offset,
+            order: [['created_at', 'DESC']],
+            group: 'commentId',
+            attributes: ['commentId']
+        })
+        const total = allCommentId.length
+        const commentIds = []
+        const loopTotal = offset + limit < total ? offset + limit : total
+        for (let i = offset; i < loopTotal; i++) {
+            commentIds.push(allCommentId[i].commentId)
+        }
+        const comments = await Comment.findAll({
+            where: {
+                targetId,
+                commentId: commentIds
+            },
             order: [
                 ['commentId', 'DESC'],
                 ['replyUserId', 'ASC'],
-                ['created_at', 'DESC']
+                ['created_at', 'ASC'],
             ]
         })
         const userIdList = []
@@ -159,6 +207,7 @@ class Comment extends Model {
                 content: comments[i].content,
                 likeNums: comments[i].likeNums,
                 createdTime: comments[i].created_at,
+                isDeleted: comments[i].isDeleted,
                 likeStatus: false
             }
             for (let k in likes) {

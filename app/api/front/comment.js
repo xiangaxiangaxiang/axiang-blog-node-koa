@@ -16,8 +16,8 @@ router.post('/add', new Auth().user, async (ctx) => {
     // 如果是回复别人
     const { commentId, replyUserId } = v.get('body')
 
-    Comment.addComment(targetId, content, uid, commentId, replyUserId, type)
-    throw new global.errs.Success() 
+    const comment = await Comment.addComment(targetId, content, uid, commentId, replyUserId, type)
+    throw new global.errs.Success(comment) 
 })
 
 router.post('/delete', new Auth().user, async (ctx) => {

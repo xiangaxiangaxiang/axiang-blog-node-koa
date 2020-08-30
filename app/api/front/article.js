@@ -66,7 +66,8 @@ router.get('/label', async ctx => {
 router.get('/about', async ctx => {
     const about = await Article.findOne({
         where: {
-            articleType: 400
+            articleType: 400,
+            publish: 1
         },
         order: [['updated_at', 'DESC']]
     })
