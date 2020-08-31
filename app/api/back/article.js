@@ -1,5 +1,5 @@
 const Router = require('koa-router')
-const xss = require('xss')
+const { myXss } = require('../../lib/xss')
 
 const { upload } = require('../../lib/upload')
 const { Auth } = require('@middlewares/auth')
@@ -65,6 +65,7 @@ router.post('/upsert', new Auth().admin, async (ctx) => {
         firstImage
     } = v.get('body')
 
+
     const article = {
         title,
         labels,
@@ -73,7 +74,7 @@ router.post('/upsert', new Auth().admin, async (ctx) => {
         publish,
         content,
         firstImage,
-        html: xss(html)
+        html: myXss.process(html)
     }
 
     if (!articleId) {

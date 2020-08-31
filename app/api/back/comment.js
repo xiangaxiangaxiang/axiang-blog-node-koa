@@ -1,5 +1,4 @@
 const Router = require('koa-router')
-const xss = require('xss')
 
 const {Auth} = require('@middlewares/auth')
 const { Comment } = require('@models/comment')

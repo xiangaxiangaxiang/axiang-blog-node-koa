@@ -8,8 +8,7 @@ const {randomStr} = require('../lib/random')
 const {Notification} = require('./notification')
 const {NotificationType, UserType, OperationType} = require('../lib/enum')
 const { Statistics } = require('./statistics')
-const like = require('./like')
-const { uniq } = require('lodash')
+const { myXss } = require('../lib/xss')
 
 class Comment extends Model {
     static async addComment(targetId, content, uid, commentId, replyUserId, type) {
@@ -25,7 +24,7 @@ class Comment extends Model {
             uniqueId: randomStr(),
             commentId: commentId ? commentId : randomStr(),
             targetId,
-            content,
+            content: myXss.process(content),
             userId: uid
         }
         if (replyUserId) {
