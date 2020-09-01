@@ -21,8 +21,27 @@ class Article extends Model {
         return {
             html: article.html,
             title: article.title,
-            markdown: article.markdown
+            markdown: article.markdown,
+            labels: article.labels
         }
+    }
+
+    static async getRecommendation(labels) {
+        const filter = labels.map(item => {
+            return {
+                [Op.like]: `%${item}%`
+            }
+        })
+        const articles = await Article.findAll({
+            where: {
+                labels: {
+                    [Op.or]: filter
+                }
+            },
+            offset: 0,
+            limit: 5
+        })
+        return articles
     }
 
     static async getArticles(offset, limit, searchText, label, articleType=null) {

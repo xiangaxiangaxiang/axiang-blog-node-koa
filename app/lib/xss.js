@@ -70,8 +70,6 @@ const options = {
 
 const myXss = new xss.FilterXSS(options)
 
-
-
 module.exports = {
     myXss
 }
