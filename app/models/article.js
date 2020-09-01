@@ -26,21 +26,41 @@ class Article extends Model {
         }
     }
 
-    static async getRecommendation(labels) {
+    static async getRecommendation(labels, articleId) {
         const filter = labels.map(item => {
             return {
                 [Op.like]: `%${item}%`
             }
         })
-        const articles = await Article.findAll({
+        let articles
+        articles = await Article.findAll({
             where: {
                 labels: {
                     [Op.or]: filter
+                },
+                articleId: {
+                    [Op.not]: articleId
                 }
             },
+            attributes: ['title', 'articleId'],
             offset: 0,
             limit: 5
         })
+        if (articles.length === 0) {
+            articles = await Article.findAll({
+                where: {
+                    articleId: {
+                        [Op.not]: articleId
+                    }
+                },
+                offset: 0,
+                limit: 5,
+                order: [
+                    ['likeNums', 'DESC'],
+                    ['clickNums', 'DESC']
+                ]
+            })
+        }
         return articles
     }
 

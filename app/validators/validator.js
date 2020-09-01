@@ -369,6 +369,25 @@ class GetCommentValidator extends PaginationsValidator {
     }
 }
 
+class GetRecommendationValidator extends LinValidator {
+    constructor() {
+        super()
+        this.articleId = [
+            new Rule('isLength', '参数错误', {min: 1})
+        ]
+        this.labels = [
+            new Rule('isLength', '参数错误', {min: 1})
+        ]
+    }
+
+    validateLables(vals) {
+        const labels = vals.query.labels
+        if (!Array.isArray(JSON.parse(labels))) {
+            throw new Error('请传入正确参数')
+        }
+    }
+}
+
 module.exports = {
     RegisterValidator,
     LoginValidator,
@@ -387,5 +406,6 @@ module.exports = {
     TypeValidator,
     ArticleIdValidator,
     StringIdValidator,
-    GetCommentValidator
+    GetCommentValidator,
+    GetRecommendationValidator
 }

@@ -2,7 +2,7 @@ const Router = require('koa-router')
 
 const { Article } = require('@models/article')
 const { Like } = require('@models/like')
-const { ArticleListValidator, TypeValidator, ArticleIdValidator } = require('@validator')
+const { ArticleListValidator, TypeValidator, ArticleIdValidator, GetRecommendationValidator } = require('@validator')
 const {Auth} = require('@middlewares/auth')
 
 const router = new Router({
@@ -10,11 +10,11 @@ const router = new Router({
 })
 
 router.get('/recommendation', async ctx => {
-    const labels = ctx.request.query.labels
-    let res = []
-    if (labels && Array.isArray(JSON.parse(labels))) {
-        res = await Article.getRecommendation(JSON.parse(labels))
-    }
+    const v = await new GetRecommendationValidator().validate(ctx)
+
+    const { labels, articleId } = v.get('query')
+
+    let res = await Article.getRecommendation(JSON.parse(labels), articleId)
     throw new global.errs.Success(res)
 })
 
