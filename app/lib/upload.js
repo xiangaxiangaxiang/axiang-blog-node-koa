@@ -7,6 +7,7 @@ const ftp = new Client();
 function upload(pathlist) {
     ftp.connect(global.config.ftp)
 
+    console.log(pathlist)
     ftp.on('ready', function() {
         for (let i in pathlist) {
             ftp.put(pathlist[i].filePath, pathlist[i].savePath,function(err) {
