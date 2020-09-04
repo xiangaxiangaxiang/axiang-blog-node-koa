@@ -151,7 +151,17 @@ Notification.init({
     }
 }, {
     sequelize,
-    tableName: 'notification'
+    tableName: 'notification',
+    indexes: [
+        {
+            name: 'uid_type',
+            fields: ['user_id', 'type']
+        },
+        {
+            name: 'operation_notice',
+            fields: ['target_id', 'target_type', 'type', 'operation_user_id', 'user_id']
+        }
+    ]
 })
 
 module.exports = {Notification}

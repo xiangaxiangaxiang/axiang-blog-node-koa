@@ -234,7 +234,17 @@ Article.init({
     }
 }, {
     sequelize,
-    tableName: 'article'
+    tableName: 'article',
+    indexes: [
+        {
+            name: 'id_label',
+            fields: ['article_id', 'labels']
+        },
+        {
+            name: 'get_articles',
+            fields: ['publish', 'labels', 'article_type', 'title']
+        }
+    ]
 })
 
 module.exports = {

@@ -131,7 +131,10 @@ Statistics.init({
         primaryKey: true,
         autoIncrement: true
     },
-    date: Sequelize.STRING,
+    date: {
+        type: Sequelize.STRING,
+        unique: true
+    },
     webHits: {
         type: Sequelize.INTEGER,
         defaultValue: 0

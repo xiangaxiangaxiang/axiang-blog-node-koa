@@ -247,10 +247,12 @@ Comment.init({
         primaryKey: true,
         autoIncrement: true
     },
+    // 唯一标识
     uniqueId: {
         type: Sequelize.STRING,
         unique: true,
     },
+    // 评论ID ，可重复， 同一条评论下的所有回复公用一个评论ID
     commentId: {
         type: Sequelize.STRING,
         require: true,
@@ -272,7 +274,13 @@ Comment.init({
     }
 }, {
     sequelize,
-    tableName: 'comment'
+    tableName: 'comment',
+    indexes: [
+        {
+            name: 'get_comments_indexs',
+            fields: ['target_id', 'comment_id', 'reply_user_id', 'created_at']
+        }
+    ]
 })
 
 module.exports = {

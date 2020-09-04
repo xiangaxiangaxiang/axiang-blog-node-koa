@@ -8,7 +8,13 @@ Label.init({
     label: Sequelize.STRING
 }, {
     tableName: 'label',
-    sequelize
+    sequelize,
+    indexes: [
+        {
+            name: 'type',
+            fields: ['type']
+        }
+    ]
 })
 
 module.exports = {

@@ -81,7 +81,13 @@ Like.init({
     type: Sequelize.INTEGER,
 }, {
     sequelize,
-    tableName: 'like'
+    tableName: 'like',
+    indexes: [
+        {
+            name: 'get_like',
+            fields: ['user_id', 'target_id', 'type']
+        }
+    ]
 })
 
 module.exports = {
