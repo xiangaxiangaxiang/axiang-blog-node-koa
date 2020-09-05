@@ -26,7 +26,7 @@ router.post('/admin_login', async (ctx) => {
     // 验证密码,用户状态
     const user = await User.verifyAdmin(account, password)
     // 生成token
-    const token = generateToken(user.id, user.userType)
+    const token = generateToken(user.uid, user.userType)
     const res = {
         uid: user.uid,
         nickname: user.nickname,

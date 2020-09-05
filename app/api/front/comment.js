@@ -13,6 +13,7 @@ router.post('/add', new Auth().user, async (ctx) => {
 
     const { targetId, content, type } = v.get('body')
     const uid = ctx.auth.uid
+    console.log(uid)
     // 如果是回复别人
     const { commentId, replyUserId } = v.get('body')
 

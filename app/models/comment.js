@@ -137,9 +137,10 @@ class Comment extends Model {
     }
 
     static async getUserInfo(ids) {
+        const uniqueIds = [...new Set(ids)]
         const users = await User.findAll({
             where: {
-                uid: [...new Set(ids)]
+                uid: uniqueIds.length === 1 ? uniqueIds[0] : uniqueIds
             },
             attributes: ['uid', 'nickname', 'avatar']
         })
