@@ -55,7 +55,7 @@ router.post('/update', new Auth().user, async (ctx) => {
         // 获取文件后缀
         const suffix = file.name.split('.').pop()
 
-        avatarPath = `/img/avatar/avatar_${v.get('body.account')}.${suffix}`
+        avatarPath = `/img/avatar/avatar_${uid}.${suffix}`
         
         // 上传文件到ftp服务器
         let filelist = [{
