@@ -27,7 +27,7 @@ router.post('/add', new Auth().admin, async (ctx) => {
         }
         saveList.push(pathItem)
     }
-    upload(saveList)
+    upload(saveList, '/img/post')
 
     await Post.addPost(content, urls, type)
     throw new global.errs.Success()

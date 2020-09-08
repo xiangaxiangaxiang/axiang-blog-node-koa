@@ -57,7 +57,7 @@ router.post('/admin_register', async (ctx) => {
             filePath: file.path,
             avatarPath
         }]
-        upload(filelist)
+        upload(filelist, '/img/avatar')
     } else {
         // 如果用户没有上传头像则随机分配一个头像
         avatarPath = `/img/avatar/default_${ Math.floor(Math.random() * 5) + 1 }.jpg`
