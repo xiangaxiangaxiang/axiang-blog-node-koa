@@ -45,7 +45,7 @@ router.post('/image_upload', new Auth().admin, async (ctx) => {
         }
         saveList.push(pathItem)
     }
-    upload(saveList)
+    upload(saveList, '/img/article')
     throw new global.errs.Success(urlList)
 
 })
