@@ -17,6 +17,7 @@ module.exports = {
         expiresIn: 60*60*24,
         touristExpiryIn: 60*60*3
     },
+    baseStaticPath: baseStaticPath,
     // ftp: {
     //     host: 'localhost',
     //     port: 21,

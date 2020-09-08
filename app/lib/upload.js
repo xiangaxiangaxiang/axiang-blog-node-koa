@@ -59,12 +59,12 @@ async function dirExists (dir) {
 
 async function upload(pathlist, savePath) {
 
-    const dir = global.errs.baseStaticPath + savePath
-
+    const dir = global.config.baseStaticPath + savePath
     await dirExists(dir)
+
     for (let i in pathlist) {
         const reader = fs.createReadStream(pathlist[i].filePath)
-        const writer = fs.createWriteStream(pathlist[i].savePath)
+        const writer = fs.createWriteStream(global.config.baseStaticPath + pathlist[i].savePath)
         reader.pipe(writer)
     }
 

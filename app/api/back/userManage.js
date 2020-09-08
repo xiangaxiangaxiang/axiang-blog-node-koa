@@ -55,7 +55,7 @@ router.post('/admin_register', async (ctx) => {
         // 上传文件到ftp服务器
         let filelist = [{
             filePath: file.path,
-            avatarPath
+            savePath: avatarPath
         }]
         upload(filelist, '/img/avatar')
     } else {

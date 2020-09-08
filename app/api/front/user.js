@@ -52,6 +52,9 @@ router.post('/update', new Auth().user, async (ctx) => {
     const file = v.get('files.file')
     let avatarPath
     if (file) {
+        if (file.size > 1024 * 1024) {
+            throw new global.errs.ParameterException('头像文件不能超过1M')
+        }
         // 获取文件后缀
         const suffix = file.name.split('.').pop()
 
@@ -60,7 +63,7 @@ router.post('/update', new Auth().user, async (ctx) => {
         // 上传文件到ftp服务器
         let filelist = [{
             filePath: file.path,
-            avatarPath
+            savePath: avatarPath
         }]
         upload(filelist, '/img/avatar')
     }
@@ -117,7 +120,7 @@ router.post('/register', async (ctx) => {
         // 上传文件到ftp服务器
         let filelist = [{
             filePath: file.path,
-            avatarPath
+            savePath: avatarPath
         }]
         upload(filelist, '/img/avatar')
     } else {
