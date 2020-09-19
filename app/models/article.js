@@ -40,7 +40,8 @@ class Article extends Model {
                 },
                 articleId: {
                     [Op.not]: articleId
-                }
+                },
+                publish: 1
             },
             attributes: ['title', 'articleId'],
             offset: 0,
@@ -51,8 +52,10 @@ class Article extends Model {
                 where: {
                     articleId: {
                         [Op.not]: articleId
-                    }
+                    },
+                    publish: 1
                 },
+                attributes: ['title', 'articleId'],
                 offset: 0,
                 limit: 5,
                 order: [
@@ -64,15 +67,15 @@ class Article extends Model {
         return articles
     }
 
-    static async getArticles(offset, limit, searchText, label, articleType=null) {
+    static async getArticles(offset, limit, searchText, label, articleType=null, publish=null) {
         let query = {
             offset,
             limit,
             order: [['updated_at', 'DESC']]
         }
-        let filter = {
-            publish: 1
-        }
+        let filter = {}
+        publish && (filter.publish = publish)
+        articleType && (filter.articleType = articleType)
         if (searchText) {
             filter.title = {
                 [Op.like]: `%${searchText}%`
@@ -82,9 +85,6 @@ class Article extends Model {
             filter.labels = {
                 [Op.like]: `%${label}%`
             }
-        }
-        if (articleType) {
-            filter.articleType = articleType
         }
 
         const total = await Article.count({ where: filter })

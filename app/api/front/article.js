@@ -29,7 +29,7 @@ router.get('/list', async ctx => {
         articleType
     } = v.get('query')
 
-    const res = await Article.getArticles(offset, limit, searchText, label, articleType)
+    const res = await Article.getArticles(offset, limit, searchText, label, articleType, 1)
 
     res.articles = res.articles.map(item => {
         return {
