@@ -8,7 +8,7 @@ class InitManager {
     InitManager.ininLoadRouter();
     InitManager.loadErrors()
     InitManager.loadConfig()
-    InitManager.schedule()
+    scheduleStatistics()
   }
 
   // 添加config到全局变量
@@ -37,10 +37,6 @@ class InitManager {
   static loadErrors() {
     const errors = require("./http-exception")
     global.errs = errors
-  }
-
-  static schedule() {
-    scheduleStatistics()
   }
 }
 
