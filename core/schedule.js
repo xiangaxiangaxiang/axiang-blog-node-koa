@@ -9,6 +9,7 @@ function scheduleStatistics(){
                 date: strTime
             }
         })
+        console.log(66)
     }); 
 }
 
